@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jee="http://www.springframework.org/schema/jee"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:cache="http://www.springframework.org/schema/cache"
+	   xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+	http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+	http://www.springframework.org/schema/cache
+    http://www.springframework.org/schema/cache/spring-cache.xsd"
+	   default-lazy-init="true">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.haoxuer.discover" />
+	<context:component-scan base-package="com.haoxuer.bigworld" />
+
+
+	<!-- 对包中的所有类进行扫描，以完成Bean创建和自动依赖注入的功能 需要更改 -->
+	<context:component-scan base-package="com.haoxuer.meicloud" />
+	<context:component-scan base-package="com.haoxuer.b2bcloud" />
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:site.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="treeInterceptor" class="com.haoxuer.discover.common.hibernate.TreeIntercptor" />
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL55Dialect</prop>
+				<prop key="hibernate.show_sql">false</prop><!-- -->
+				<prop key="hibernate.format_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop> <!--none update  create create-drop validate-->
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>com.haoxuer.discover.user.data.entity</value>
+				<value>com.haoxuer.discover.web.data.entity</value>
+				<value>com.haoxuer.discover.plug.data.entity</value>
+				<value>com.haoxuer.discover.config.data.entity</value>
+				<value>com.haoxuer.discover.area.data.entity</value>
+				<value>com.haoxuer.discover.site.data.entity</value>
+				<value>com.haoxuer.discover.trade.data.entity</value>
+				<value>com.haoxuer.discover.storage.data.entity</value>
+				<value>com.haoxuer.discover.quartz.data.entity</value>
+
+				<value>com.haoxuer.bigworld.tenant.data.entity</value>
+				<value>com.haoxuer.bigworld.member.data.entity</value>
+				<value>com.haoxuer.bigworld.ad.data.entity</value>
+				<value>com.haoxuer.bigworld.brand.data.entity</value>
+				<value>com.haoxuer.bigworld.activity.data.entity</value>
+				<value>com.haoxuer.bigworld.plugin.data.entity</value>
+				<value>com.haoxuer.bigworld.message.data.entity</value>
+				<value>com.haoxuer.bigworld.site.data.entity</value>
+				<value>com.haoxuer.bigworld.area.data.entity</value>
+				<value>com.haoxuer.bigworld.company.data.entity</value>
+				<value>com.haoxuer.bigworld.article.data.entity</value>
+				<value>com.haoxuer.bigworld.pay.data.entity</value>
+
+				<value>com.haoxuer.meicloud.wms.data.entity</value>
+				<value>com.haoxuer.meicloud.crm.data.entity</value>
+
+				<!-- 商品管理 -->
+				<value>com.haoxuer.b2bcloud.mall.data.entity</value>
+				<value>com.haoxuer.b2bcloud.product.data.entity</value>
+				<value>com.haoxuer.b2bcloud.store.data.entity</value>
+				<value>com.haoxuer.b2bcloud.order.data.entity</value>
+				<value>com.haoxuer.b2bcloud.promote.data.entity</value>
+				<value>com.haoxuer.b2bcloud.transport.data.entity</value>
+				<value>com.haoxuer.b2bcloud.customer.data.entity</value>
+				<value>com.haoxuer.b2bcloud.member.data.entity</value>
+				<value>com.haoxuer.b2bcloud.finance.data.entity</value>
+				<value>com.haoxuer.b2bcloud.common.data.entity</value>
+				<value>com.haoxuer.b2bcloud.purchase.data.entity</value>
+
+			</list>
+		</property>
+		<property name="entityInterceptor" ref="treeInterceptor">
+		</property>
+	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	<tx:annotation-driven />
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<mybatis:scan base-package="com.haoxuer.b2bcloud.analysis.mapper" />
+	<mybatis:scan base-package="com.haoxuer.b2bcloud.order.mapper" />
+
+</beans>

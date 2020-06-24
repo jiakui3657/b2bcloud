@@ -1,0 +1,2054 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商品</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	[#include "/admin/common/commons.html"]
+
+	<!--tree -->
+	<link href="${siteurl}plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+	<link rel="stylesheet" href="${siteurl}plugins/vue-element/element.css">
+</head>
+<style>
+	.content-header {
+		padding: 0;
+	}
+
+	.content {
+		padding: 0 10px 10px;
+		background-color: #f9f9f9;
+	}
+
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	h3 {
+		margin: 15px 0 15px 0;
+		padding-bottom: 10px;
+		font-size: 14px;
+		line-height: 16px;
+		border-bottom: 1px solid #f9f9f9;
+	}
+
+	h3 span {
+		display: block;
+		padding-left: 10px;
+		margin-right: 5px;
+		border-left: 3px solid #5491de;
+	}
+
+	[v-cloak] {
+		display: none;
+	}
+
+	/* 导航 */
+	.navigation {
+		height: 60px;
+		line-height: 60px;
+		background-color: #f9f9f9;
+		padding-left: 10px;
+	}
+
+	.navigation i {
+		color: #d9dee5;
+		display: inline-block;
+		font-size: 14px;
+		color: #666666;
+		font-style: normal;
+	}
+
+	.navigation i::after {
+		content: '/';
+		display: inline-block;
+		margin: 0 5px;
+	}
+
+	.navigation span {
+		font-weight: 700;
+		font-size: 14px;
+		color: #666666;
+	}
+
+	/* 商品资料 */
+	.goods {
+		background-color: #fff;
+		padding: 10px 15px;
+		overflow: auto;
+	}
+
+	/* 搜索 */
+	.search {
+		background-color: #f9f9f9;
+		padding: 16px 10px;
+		box-sizing: border-box;
+	}
+
+	.goodsChoose input {
+		border-right: 0 !important;
+	}
+
+	/* tab切换 */
+	.tab .el-menu--horizontal>.el-menu-item {
+		height: 36px;
+		line-height: 36px;
+	}
+
+	/* 商品内容 */
+	.goods_content {
+		height: 100%;
+	}
+
+	.goods_content_l {
+		background-color: #f9f9f9;
+		height: 100%;
+		overflow: auto;
+	}
+
+	.goods_content_l .el-tree {
+		background-color: transparent;
+	}
+
+	.goods_content_l .el-tree .el-tree-node__label {
+		font-size: 13px;
+		font-weight: bold;
+	}
+
+	.goods_content_l .el-tree-node {
+		margin: 5px 0;
+	}
+
+	.goods_content_l .el-tree-node__content:hover {
+		background-color: #f9f9f9;
+	}
+
+	.add_goods {
+		padding: 10px 0 5px 0;
+	}
+
+	.goodsInfo {
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+	}
+
+	.goodsInfo img {
+		width: 50px;
+		height: 50px;
+		margin-right: 5px;
+		background-color: red;
+	}
+
+	.goodsInfo div {
+		flex: 1;
+		font-size: 12px;
+    	line-height: 16px;
+	}
+
+	.goodsTitle {
+		background: #5491de;
+    	color: #fff;
+		font-style: normal;
+		border-radius: 2px;
+		height: 14px;
+		width: 14px;
+		line-height: 14px;
+		padding: 0;
+		font-size: 12px;
+		display: inline-block;
+		text-align: center;
+		margin-right: 4px;
+	}
+
+	.chlidrenGoodsList li {
+		min-height: 64px;
+		padding: 10px 0;
+		display: flex;
+		padding-left: 80px;
+		border-bottom: 1px solid #f9f9f9;
+	}
+
+	.chlidrenGoodsList li div {
+		align-items: center;
+		display: flex;
+	}
+
+	.el-table--enable-row-transition .el-table__body td {
+		padding: 10px 0 !important;
+	}
+
+	.more {
+		margin-left: 10px;
+	}
+
+	.el-popover .item {
+		font-size: 12px;
+		color: #000;
+		line-height: 24px;
+		cursor: pointer;
+	}
+
+	.department {
+		line-height: 40px;
+	}
+
+	.el-dialog__header {
+		padding: 14px 16px;
+		border-radius: 2px 2px 0 0;
+		background: #fff;
+		color: #666;
+		border-bottom: 1px solid #e9e9e9;
+	}
+
+	.el-dialog__header .el-dialog__title {
+		margin: 0;
+		font-size: 14px;
+		line-height: 21px;
+		font-weight: bold;
+	}
+
+	.el-dialog__header .el-dialog__headerbtn {
+		top: 14px;
+	}
+
+	.personnelUpload {
+		width: 100%;
+	}
+
+	.personnelUpload .el-upload {
+		width: 100%;
+	}
+
+	.personnelUpload .el-upload .el-upload-dragger {
+		width: 100%;
+	}
+
+	.personnelUpload .el-upload .el-upload__input {
+		display: none;
+	}
+
+	.el-tree-node__content {
+		position: relative;
+		line-height: 14px;
+		padding: 0 10px !important;
+	}
+
+	.el-tree-node__content>label.el-checkbox {
+		position: absolute;
+		right: 15px;
+	}
+
+	.departmentDialog .el-row {
+		height: 300px;
+	}
+
+	.departmentDialog .title {
+		line-height: 18px;
+		font-size: 13px;
+		color: #9B9B9B;
+		margin-bottom: 18px;
+	}
+
+	.departmentDialog li {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-size: 13px;
+		color: #3C3C3C;
+		line-height: 28px;
+		padding: 0 2px;
+		cursor: pointer;
+	}
+
+	.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content {
+		background-color: #2984EF;
+		color: #fff;
+	}
+
+	.custom-tree-node i {
+		position: absolute;
+		right: 14px;
+		display: none;
+		overflow: hidden;
+	}
+
+	.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content i {
+		display: inline-block;
+	}
+
+	.page {
+		text-align: right;
+		margin: 10px 0;
+	}
+
+    .customerLable {
+        display: inline-block;
+        height: 25px;
+        margin-left: 5px;
+        padding-left: 4px;
+        padding-right: 4px;
+        font-size: 12px;
+        text-align: center;
+        line-height: 24px;
+        font-family: Roboto, serif;
+        border: 1px solid #d9d9d9;
+        background-color: #f7f7f7;
+        border-radius: 2px;
+    }
+
+    .customerMore {
+        margin-left: 5px;
+        display: inline-block;
+        color: #5491de;
+        cursor: pointer;
+    }
+
+	.el-drawer__header>:first-child {
+		flex: 0;
+	}
+
+	.el-tabs__active-bar {
+		display: none;
+	}
+
+	.el-tabs__nav-wrap::after {
+		height: 1px;
+	}
+
+	.el-tabs__item {
+		padding: 0 20px !important;
+	}
+
+	.el-tabs__item.is-active {
+		border-bottom: 2px solid #409EFF;
+	}
+
+	.el-carousel__arrow {
+		display: none !important;
+	}
+
+	/* 有户信息 */
+	.userInfo {
+		padding: 5px 60px;
+		font-size: 12px;
+		color: #666;
+	}
+
+	.el-drawer__body {
+		overflow-y: auto;
+	}
+
+	.userInfoItem {
+		margin-bottom: 10px;
+		padding: 7px 0;
+		line-height: 32px;
+	}
+
+	.el-carousel__item, .el-carousel__mask {
+		position: relative;
+	}
+
+	.orderCode {
+		padding: 5px 16px;
+		margin: 0;
+		clear: both;
+		font-size: 12px;
+		font-weight: normal;
+		color: #666;
+		white-space: nowrap;
+		cursor: pointer;
+		transition: background 0.3s ease;
+	}
+
+	.el-radio__label {
+		font-size: 12px;
+	}
+
+	.couponsTotal {
+		background-color: #f7f7f7;
+		color: #666;
+		line-height: 40px;
+    	padding-left: 10px;
+	}
+
+	.el-dialog__footer {
+		padding: 0px 20px 20px;
+	}
+
+	.el-dialog__body {
+		padding-bottom: 0px;
+	}
+
+	.el-checkbox__label {
+		font-size: 12px;
+	}
+
+	.el-form-item {
+		margin-bottom: 0;
+	}
+
+	.el-form-item__error {
+		position: relative;
+		padding-top: 0;
+		padding-left: 5px;
+		line-height: 1.4;
+	}
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Header Navbar: style can be found in header.less -->
+			[#include "/admin/common/nav.html"]
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				[@user_panel /]
+				<!-- search form -->
+				[@sidebar_form /]
+				<!-- /.search form -->
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">主面板</li>
+					[@menustag id=1]
+					[#list list as item]
+					[@menu item "1,86"]
+					[/@menu]
+					[/#list]
+					[/@menustag]
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" id="app" v-cloak>
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<!-- 导航 -->
+				<div class="navigation">
+					<span>客户</span>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+				<!-- Default box -->
+				<div class="goods">
+					<!-- 商品 -->
+					<div class="goods_content">
+						<div class="search">
+							<el-row :gutter="20" class="row-bg">
+								<el-col :span="6">
+									<el-input size="small" v-model="search.name" placeholder="客户名称/联系人姓名/手机号码"></el-input>
+								</el-col>
+								<el-col :span="6">
+									<el-select size="small" clearable style="width: 100%;" v-model="search.level" placeholder="客户等级">
+										<el-option
+										  v-for="item in search.levelOptions"
+										  :key="item.value"
+										  :label="item.label"
+										  :value="item.value">
+										</el-option>
+									</el-select>
+								</el-col>
+								<el-col :span="6">
+									<el-select size="small" clearable style="width: 100%;" v-model="search.area" placeholder="销售区域">
+										<el-option
+										  v-for="item in search.areaOptions"
+										  :key="item.value"
+										  :label="item.label"
+										  :value="item.value">
+										</el-option>
+									</el-select>
+								</el-col>
+								<el-col :span="6">
+									<el-select size="small" clearable style="width: 100%;" v-model="search.manager" placeholder="客户经理">
+										<el-option
+										  v-for="item in search.managerOptions"
+										  :key="item.value"
+										  :label="item.label"
+										  :value="item.value">
+										</el-option>
+									</el-select>
+								</el-col>
+							</el-row>
+							<el-row :gutter="20" type="flex" class="row-bg" justify="space-between" style="margin-top: 5px;">
+								<el-col :span="6">
+									<el-date-picker
+									size="small"
+									style="width: 100%;"
+									v-model="search.time"
+									type="daterange"
+									range-separator="~"
+									start-placeholder="开始日期"
+									end-placeholder="结束日期">
+									</el-date-picker>
+								</el-col>
+								<el-col :span="6">
+									<el-select size="small" style="width: 100%;" v-model="search.label" clearable multiple placeholder="客户标签">
+										<el-option
+										  v-for="item in search.labelOptions"
+										  :key="item.value"
+										  :label="item.label"
+										  :value="item.value">
+										</el-option>
+									</el-select>
+								</el-col>
+								<el-col :span="6" :offset="6" style="text-align: right;">
+									<el-button size="small" type="primary" @click="searchUserInfo">搜 索</el-button>
+								</el-col>
+							</el-row>
+						</div>
+						<el-row style="height: 100%;">
+							<el-col :span="24">
+								<div class="add_goods">
+                                    <el-row>
+										<el-col :span="14">
+                                            <el-button size="small" @click="addCustomer.state = true;">新增客户</el-button>
+                                            <el-button size="small">导入</el-button>
+                                            <el-button size="small">导出</el-button>
+                                            <el-popover
+                                                class="more"
+                                                placement="bottom"
+                                                width="150"
+                                                trigger="click">
+                                                <div class="item">设置等级</div>
+                                                <div class="item">锁定</div>
+                                                <div class="item">解锁</div>
+                                                <div class="item">删除</div>
+                                                <div class="item">绑定客户经理</div>
+                                                <div class="item">发优惠券</div>
+                                                <div class="item">设置销售区域</div>
+                                                <div class="item">加标签</div>
+                                                <div class="item">删除标签</div>
+                                                <el-button size="small" slot="reference">批量操作 <i class="el-icon-arrow-down"></i></el-button>
+                                            </el-popover>
+                                        </el-col>
+										<el-col :span="10" style="line-height: 32px;text-align: right;color: #186FD5;cursor: pointer;">
+											<span style="margin-right: 20px;">合作邀请</span>
+                                            <span style="margin-right: 20px;">资质认证</span>
+                                            <a href="${siteurl}tenant/customerlevel/view_list.htm" style="margin-right: 20px;">客户等级</a>
+                                            <span style="margin-right: 20px;">销售区域</span>
+											<a href="${siteurl}tenant/customertag/view_list.htm" style="margin-right: 20px;">客户标签</a>
+										</el-col>
+									</el-row>
+								</div>
+								<el-table
+                                :data="tableData.list"
+                                :header-cell-style="{
+                                    'background-color': '#f7f7f7',
+                                    'color': '#666'
+                                }"
+								style="width: 100%;font-size: 12px;margin-top: 10px;">
+									<el-table-column
+											label="登录账号"
+											width="110"
+											:show-overflow-tooltip="true"
+											prop="name">
+										<template slot-scope="scope">
+											<span class="customerMore" @click="openUserInfo(scope.row)">{{scope.row.no}}</span>
+										</template>
+									</el-table-column>
+									<el-table-column
+									label="客户名称"
+									width="110"
+									:show-overflow-tooltip="true"
+                                    prop="name">
+                                    <template slot-scope="scope">
+                                        <span class="customerMore" @click="openUserInfo(scope.row)">{{scope.row.name}}</span>
+                                    </template>
+									</el-table-column>
+									<el-table-column
+									width="110"
+									label="店铺名称"
+									:show-overflow-tooltip="true"
+                                    prop="shop">
+                                    <template slot-scope="scope">
+                                        <a href="">{{scope.row.shop}}</a>
+                                    </template>
+									</el-table-column>
+									<el-table-column
+									width="70"
+									label="店铺类型"
+									:show-overflow-tooltip="true"
+									prop="Department">
+									</el-table-column>
+									<el-table-column
+									width="70"
+									label="客户等级"
+									:show-overflow-tooltip="true"
+									prop="level">
+                                    </el-table-column>
+                                    <el-table-column
+									width="180"
+									label="联系人姓名"
+									:show-overflow-tooltip="true"
+									prop="phone">
+                                    </el-table-column>
+                                    <el-table-column
+									width="100"
+									label="注册来源"
+									:show-overflow-tooltip="true"
+									prop="source">
+                                    </el-table-column>
+                                    <el-table-column
+									width="100"
+									label="行业"
+									:show-overflow-tooltip="true"
+									prop="phone">
+                                    </el-table-column>
+                                    <el-table-column
+									width="100"
+									label="手机号码"
+									:show-overflow-tooltip="true"
+									prop="phone">
+                                    </el-table-column>
+                                    <el-table-column
+									width="80"
+									label="销售区域"
+									:show-overflow-tooltip="true"
+									prop="phone">
+                                    </el-table-column>
+                                    <el-table-column
+									width="200"
+									label="客户标签">
+                                    <template slot-scope="scope">
+                                        <span class="customerLable">新户</span>
+                                        <span class="customerLable">新户</span>
+                                        <span class="customerMore" @click="viewLableState = true;">更多</span>
+                                    </template>
+                                    </el-table-column>
+                                    <el-table-column
+									width="80"
+									label="客户经理"
+									:show-overflow-tooltip="true"
+									prop="phone">
+                                    </el-table-column>
+                                    <el-table-column
+									width="60"
+									label="状态"
+									:show-overflow-tooltip="true"
+									prop="phone">
+									</el-table-column>
+                                    <el-table-column
+                                    width="150"
+                                    fixed="right"
+                                    label="操作">
+                                    <template slot-scope="scope" >
+                                        <span @click="label.state = true;label.title = scope.row.name;" style="margin-right: 10px;cursor: pointer;">加标签</span>
+										<a style="margin-right: 10px;" :href="'${siteurl}tenant/orderdata/view_add.htm?id='+scope.row.id+''">代下单</a>
+										<span @click="delectUserInfo(scope.$index, scope.row.id)" style="color: #5491de;cursor: pointer;">删除</span>
+                                    </template>
+									</el-table-column>
+								</el-table>
+								<div class="page">
+									<el-pagination
+									background
+									layout="prev, pager, next"
+									:page-size="tableData.size"
+									:page-count="tableData.totalPage"
+									:current-page="search.no"
+									:total="tableData.total"
+									@current-change="tableDataChange">
+									</el-pagination>
+								</div>
+							</el-col>
+						</el-row>
+					</div>
+				</div>
+
+				<!-- 加标签 -->
+				<el-dialog
+				:title="label.title"
+				:visible.sync="label.state"
+				width="30%"
+				:before-close="handleClose(label.state)">
+				<el-row :gutter="20">
+					<el-col :span="16" :offset="4">
+						<el-row>
+                            <el-select style="width: 100%;" size="small" v-model="label.name" multiple placeholder="请选择标签">
+                                <el-option
+                                  v-for="item in label.nameOptions"
+                                  :key="item.value"
+                                  :label="item.label"
+                                  :value="item.value">
+                                </el-option>
+                            </el-select>
+                        </el-row>
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+					<el-button size="small" @click="label.state = false">取 消</el-button>
+					<el-button size="small" type="primary" @click="addLabel">确 定</el-button>
+				</span>
+                </el-dialog>
+                
+                <!-- 查看标签 -->
+                <el-dialog
+				title="查看标签"
+				:visible.sync="viewLableState"
+				width="30%"
+				:before-close="handleClose(viewLableState)">
+				<el-row :gutter="20">
+					<el-col :span="16" :offset="4">
+						<span class="customerLable" v-for="(item, index) in viewLableList" :key="index">{{item}}</span>
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+					<el-button size="small" type="primary" @click="viewLableState = false">关闭</el-button>
+				</span>
+                </el-dialog>
+                
+                <!-- 用户信息 -->
+				<el-drawer
+				title=""
+				:withHeader="false"
+                :visible.sync="userInfo.state"
+                direction="rtl"
+				size="75%"
+				:before-close="shutDownClose">
+					<div class="userInfo">
+						<el-tabs v-model="userInfo.initialIndex">
+							<el-tab-pane label="基础资料" name="0"></el-tab-pane>
+							<el-tab-pane label="收货地址" name="1"></el-tab-pane>
+							<el-tab-pane label="订单" name="2"></el-tab-pane>
+							<el-tab-pane label="优惠券" name="3"></el-tab-pane>
+						</el-tabs>
+						<div class="userInfoData" v-show="userInfo.initialIndex == 0">
+							<div class="userInfoDetail" v-if="userInfoState">
+								<h3>
+									<span>TA信息</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 手机：</el-col>
+									<el-col :span="6">{{modifyUserInfo.phone}}</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 联系人：</el-col>
+									<el-col :span="6">{{modifyUserInfo.name}}</el-col>
+								</el-row>
+								<h3>
+									<span>客户信息</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 客户名称：</el-col>
+									<el-col :span="6">{{modifyUserInfo.customerName}}</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户位置：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">自定义店铺：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">登录名：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户等级：</el-col>
+									<el-col :span="6">{{modifyUserInfo.customerLevel}}</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">销售区域：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户经理：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">座机：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户标签：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">备注：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<h3>
+									<span>用户账号</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">邮箱：</el-col>
+									<el-col :span="6"></el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3"></el-col>
+									<el-col :span="8" style="text-align: right;">
+										<el-button size="small" type="primary" @click="userInfoState = false">编辑</el-button>
+										<el-button size="small">返回</el-button>
+									</el-col>
+								</el-row>
+							</div>
+							<div class="modifyUserInfo" v-if="!userInfoState">
+								<h3>
+									<span>TA信息</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 手机：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="请输入手机号码" v-model="modifyUserInfo.phone"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 联系人：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="请输入联系人姓名,2-20字" v-model="modifyUserInfo.name"></el-input>
+									</el-col>
+								</el-row>
+								<h3>
+									<span>客户信息</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">* 客户名称：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="请输入客户名称,2-20字" v-model="modifyUserInfo.customerName"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户位置：</el-col>
+									<el-col :span="6">
+										<el-cascader
+										size="small"
+										style="width: 100%;"
+										v-model="modifyUserInfo.customerLocation"
+										:options="modifyUserInfo.customerLocationOptions">
+										</el-cascader>
+									</el-col>
+									<el-col :span="16" :offset="3">
+										<el-input style="width: 37.5%;" size="small" placeholder="请输入详细地址" v-model="modifyUserInfo.detailedAddress"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">自定义店铺：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="2-20字" v-model="modifyUserInfo.customStore"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">登录名：</el-col>
+									<el-col :span="6">
+										<el-input size="small" v-model="modifyUserInfo.loginName"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户等级：</el-col>
+									<el-col :span="6">
+										<el-select style="width: 100%;" size="small" v-model="modifyUserInfo.customerLevel" placeholder="请选择客户等级">
+											<el-option
+											  v-for="item in modifyUserInfo.levelOptions"
+											  :key="item.value"
+											  :label="item.label"
+											  :value="item.value">
+											</el-option>
+										</el-select>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">销售区域：</el-col>
+									<el-col :span="6">
+										<el-select style="width: 100%;" size="small" v-model="modifyUserInfo.salesArea" placeholder="默认全国">
+											<el-option
+											  v-for="item in modifyUserInfo.salesAreaOptions"
+											  :key="item.value"
+											  :label="item.label"
+											  :value="item.value">
+											</el-option>
+										</el-select>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户经理：</el-col>
+									<el-col :span="6">
+										<el-select style="width: 100%;" size="small" v-model="modifyUserInfo.customerManager" placeholder="请选择客户经理">
+											<el-option
+											  v-for="item in modifyUserInfo.customerManagerOptions"
+											  :key="item.value"
+											  :label="item.label"
+											  :value="item.value">
+											</el-option>
+										</el-select>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">座机：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="请输入座机号码" v-model="modifyUserInfo.landline"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">客户标签：</el-col>
+									<el-col :span="6">
+										<el-select style="width: 100%;" multiple size="small" v-model="modifyUserInfo.customerLabel" placeholder="请选择客户经理">
+											<el-option
+											  v-for="item in modifyUserInfo.customerLabelOptions"
+											  :key="item.value"
+											  :label="item.label"
+											  :value="item.value">
+											</el-option>
+										</el-select>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">备注：</el-col>
+									<el-col :span="6">
+										<el-input type="textarea" :rows="3" size="small" placeholder="备注500字之间" v-model="modifyUserInfo.note"></el-input>
+									</el-col>
+								</el-row>
+								<h3>
+									<span>用户账号</span>
+								</h3>
+								<el-row class="userInfoItem">
+									<el-col :span="3" style="text-align: right;">邮箱：</el-col>
+									<el-col :span="6">
+										<el-input size="small" placeholder="请输入邮箱" v-model="modifyUserInfo.email"></el-input>
+									</el-col>
+								</el-row>
+								<el-row class="userInfoItem">
+									<el-col :span="3"></el-col>
+									<el-col :span="8" style="text-align: right;">
+										<el-button size="small" type="primary" @click="modifyUserInfos">保存</el-button>
+										<el-button size="small" @click="userInfoState = true">返回</el-button>
+									</el-col>
+								</el-row>
+							</div>
+						</div>
+						<div class="userInfoAddress" v-show="userInfo.initialIndex == 1">
+							<div>
+								<el-button size="small" type="primary" @click="address.addAddressState = true;address.title = '新增收货地址'">新增</el-button>
+								<el-button size="small" @click="delectAddress">删除</el-button>
+							</div>
+							<el-table
+							:data="address.tableData.list"
+							:header-cell-style="{
+								'background-color': '#f7f7f7',
+								'color': '#666'
+							}"
+							@selection-change="addressSelectionChange"
+							style="width: 100%;font-size: 12px;margin-top: 10px;">
+								<el-table-column
+								type="selection"
+								align="center"
+								header-align="center"
+								width="40">
+								</el-table-column>
+								<el-table-column
+								label="收货人姓名"
+								width="180"
+								:show-overflow-tooltip="true"
+								prop="name">
+								</el-table-column>
+								<el-table-column
+								width="180"
+								label="手机号码"
+								prop="phone">
+								</el-table-column>
+								<el-table-column
+								width="120"
+								label="座机"
+								prop="landline">
+								</el-table-column>
+								<el-table-column
+								label="详细地址"
+								:show-overflow-tooltip="true"
+								prop="detailedAddress">
+								</el-table-column>
+								<el-table-column
+								width="80"
+								label="邮编"
+								:show-overflow-tooltip="true"
+								prop="postCode">
+								</el-table-column>
+								<el-table-column
+								width="80"
+								label="是否默认"
+								prop="defaultCode">
+								</el-table-column>
+								<el-table-column
+								width="80"
+								align="center"
+								header-align="center"
+								label="操作">
+								<template slot-scope="scope" style="color: #5491de;">
+									<span style="cursor: pointer;color: #5491de;" @click="updateAddress(scope.row)">编辑</span>
+									<span style="cursor: pointer;color: #5491de;" @click="delectAddress(scope.row.id)">删除</span>
+								</template>
+								</el-table-column>
+							</el-table>
+						</div>
+						<div class="userInfoOrder" v-show="userInfo.initialIndex == 2">
+							<el-table
+							:data="order.list"
+							:header-cell-style="{
+								'background-color': '#f7f7f7',
+								'color': '#666'
+							}"
+							@selection-change="handleSelectionChange"
+							style="width: 100%;font-size: 12px;margin-top: 10px;">
+								<el-table-column
+								label="订单编号"
+								width="170"
+								prop="name">
+								</el-table-column>
+								<el-table-column
+								width="170"
+								label="订单金额"
+								prop="phone">
+								</el-table-column>
+								<el-table-column
+								prop="landline"
+								width="170">
+									<template slot="header" slot-scope="scope">
+										<div>
+											订单状态
+											<el-popover
+												placement="bottom"
+												width="80"
+												trigger="click">
+												<el-row>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="1">全部订单</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="2">待审核</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="3">待发货</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="4">待收货</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="5">待收款</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="6">已完成</el-radio>
+													</el-col>
+													<el-col class="orderCode" :span="24">
+														<el-radio v-model="orderCode" label="7">已取消</el-radio>
+													</el-col>
+												</el-row>
+												<i style="cursor: pointer;" slot="reference" class="el-icon-sort"></i>
+											</el-popover>
+										</div>
+										
+								  	</template>
+								</el-table-column>
+								<el-table-column
+								label="支付状态"
+								width="170"
+								prop="detailedAddress">
+								</el-table-column>
+								<el-table-column
+								width="170"
+								label="支付方式"
+								prop="phone">
+								</el-table-column>
+								<el-table-column
+								label="下单时间"
+								prop="phone">
+								</el-table-column>
+							</el-table>
+							<div class="page">
+								<el-pagination
+								background
+								layout="prev, pager, next"
+								:page-size="order.size"
+								:page-count="order.totalPage"
+								:current-page="order.no"
+								:total="order.total"
+								@current-change="tableDataChange">
+								</el-pagination>
+							</div>
+						</div>
+						<div class="userInfoCoupons" v-show="userInfo.initialIndex == 3">
+							<div>
+								<el-button size="small" type="primary" @click="coupons.chooseCoupons = true">发劵</el-button>
+							</div>
+							<el-table
+                                :data="coupons.tableData.list"
+                                :header-cell-style="{
+                                    'background-color': '#f7f7f7',
+                                    'color': '#666'
+                                }" style="width: 100%;font-size: 12px;margin-top: 10px;">
+									<el-table-column
+									label="优惠券名称"
+									width="300"
+									prop="name">
+									</el-table-column>
+									<el-table-column
+									width="200"
+									label="优惠券类型"
+									prop="name">
+									</el-table-column>
+									<el-table-column
+									width="200"
+									label="面值(元)"
+									prop="name">
+									</el-table-column>
+									<el-table-column
+									label="有效时间"
+									width="200"
+									prop="name">
+                                    </el-table-column>
+                                    <el-table-column
+									label="状态"
+									prop="name">
+										<template slot="header" slot-scope="scope">
+											<div>
+												状态
+												<el-popover
+													placement="bottom"
+													width="80"
+													trigger="click">
+													<el-row>
+														<el-col class="orderCode" :span="24">
+															<el-radio v-model="coupons.couponsCode" label="1">未使用</el-radio>
+														</el-col>
+														<el-col class="orderCode" :span="24">
+															<el-radio v-model="coupons.couponsCode" label="2">已使用</el-radio>
+														</el-col>
+														<el-col class="orderCode" :span="24">
+															<el-radio v-model="coupons.couponsCode" label="3">已过期</el-radio>
+														</el-col>
+													</el-row>
+													<i style="cursor: pointer;" slot="reference" class="el-icon-sort"></i>
+												</el-popover>
+											</div>
+											
+										</template>
+                                    </el-table-column>
+							</el-table>
+							<div class="page">
+								<el-pagination
+								background
+								layout="prev, pager, next"
+								:page-size="coupons.tableData.size"
+								:page-count="coupons.tableData.totalPage"
+								:current-page="coupons.tableData.no"
+								:total="coupons.tableData.total"
+								@current-change="tableDataChange">
+								</el-pagination>
+							</div>
+						</div>
+					</div>
+				</el-drawer>
+
+				<!-- 新增收货地址 -->
+				<el-dialog
+				:title="address.title"
+				:visible.sync="address.addAddressState"
+				width="30%"
+				:before-close="handleClose(address.addAddressState)">
+				<el-form :model="form_address" :rules="form_rules" ref="form_address" label-width="120px" class="demo-ruleForm">
+					<el-row :gutter="20">
+						<el-col :span="20">
+							<el-row>
+								<el-form-item label="收货人姓名：" prop="name">
+									<el-input size="small" placeholder="请输入收货人姓名,2~32之间" v-model="form_address.name"></el-input>
+								</el-form-item>
+							</el-row>
+							<el-row>
+								<el-form-item label="手机号码：">
+									<el-input size="small" placeholder="请输入手机号码" v-model="form_address.phone"></el-input>
+								</el-form-item>
+							</el-row>
+							<el-row>
+								<el-form-item label="座机：">
+									<el-input size="small" placeholder="请输入座机号码" v-model="form_address.tel"></el-input>
+								</el-form-item>
+								<el-col :span="16" :offset="8">
+									<span style="margin-top: -10px;padding-left: 5px;line-height: 32px;color: #999;font-size: 12px;display: inline-block;">手机/座机必填一项</span>
+								</el-col>
+							</el-row>
+							<el-row>
+								<el-form-item label="地址：" prop="detailedAddress">
+									<el-cascader
+									size="small"
+									style="width: 100%;"
+									v-model="form_address.detailedAddress"
+									:options="addressOptions">
+									</el-cascader>
+								</el-form-item>
+								<el-form-item prop="address">
+									<el-input size="small" placeholder="请输入详细地址" v-model="form_address.address"></el-input>
+								</el-form-item>
+							</el-row>
+							<el-row>
+								<el-form-item label="邮编：">
+									<el-input size="small" v-model="form_address.code"></el-input>
+								</el-form-item>
+							</el-row>
+							<el-row v-if="address.title == '新增收货地址'">
+								<el-form-item label="是否设为默认：">
+									<el-checkbox-group size="small" v-model="form_address.defaultState">
+										<el-checkbox label="设为默认" name="type"></el-checkbox>
+									</el-checkbox-group>
+								</el-form-item>
+							</el-row>
+						</el-col>
+					</el-row>
+				</el-form>
+				
+				<span slot="footer" class="dialog-footer">
+					<el-button size="small" type="primary" @click="addAddress()">保 存</el-button>
+					<el-button size="small" @click="address.addAddressState = false">取 消</el-button>
+				</span>
+				</el-dialog>
+				
+				<!-- 选择优惠券 -->
+				<el-dialog
+				title="请选择优惠券"
+				:visible.sync="coupons.chooseCoupons"
+				width="52%"
+				:before-close="handleClose(coupons.chooseCoupons)">
+				<el-table
+					:data="coupons.chooseCouponsData.list"
+					:header-cell-style="{
+						'background-color': '#f7f7f7',
+						'color': '#666'
+					}" style="font-size: 12px;">
+						<el-table-column
+						type="selection"
+						align="center"
+						header-align="center"
+						width="40">
+						</el-table-column>
+						<el-table-column
+						label="优惠券名称"
+						width="120"
+						prop="name">
+						</el-table-column>
+						<el-table-column
+						width="120"
+						label="优惠券类型"
+						prop="name">
+						</el-table-column>
+						<el-table-column
+						width="100"
+						label="面值(元)"
+						prop="name">
+						<template slot-scope="scope">
+							<span style="display: block;line-height: 16px;display: inline-block">200.00</span>
+							<span style="color: #9f9f9f;line-height: 16px;display: inline-block">满10000.00可用</span>
+						</template>
+						</el-table-column>
+						<el-table-column
+						label="	发送限制"
+						width="100"
+						prop="name">
+						<template slot-scope="scope">
+							<span style="display: block;line-height: 16px;">1张/人</span>
+							<span style="color: #9f9f9f;line-height: 16px;display: inline-block">库存7</span>
+						</template>
+						</el-table-column>
+						<el-table-column
+						label="有效时间"
+						prop="name">
+						<template slot-scope="scope">
+							<span>2019-12-01 00:00:00 至 2020-11-01 23:59:59</span>
+						</template>
+						</el-table-column>
+				</el-table>
+				<div class="couponsTotal">
+					已选优惠券：0
+				</div>
+				<div class="page">
+					<el-pagination
+					background
+					layout="prev, pager, next"
+					:page-size="coupons.chooseCouponsData.size"
+					:page-count="coupons.chooseCouponsData.totalPage"
+					:current-page="coupons.chooseCouponsData.no"
+					:total="coupons.chooseCouponsData.total"
+					@current-change="tableDataChange">
+					</el-pagination>
+				</div>
+				<span slot="footer" class="dialog-footer">
+					<el-button size="small" @click="coupons.chooseCoupons = false">确 定</el-button>
+					<el-button size="small" @click="coupons.chooseCoupons = false">取 消</el-button>
+				</span>
+				</el-dialog>
+
+				<!-- 新增客户 -->
+				<el-dialog
+				title="新增客户"
+				:visible.sync="addCustomer.state"
+				width="40%"
+				:before-close="handleClose(addCustomer.state)">
+				<el-row :gutter="20">
+					<el-col :span="18" :offset="2">
+                        <el-row>
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">* 手机号码：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" placeholder="请输入手机号码" v-model="addCustomer.phone"></el-input>
+							</el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">* 联系人：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" placeholder="请输入联系人姓名,2-20字" v-model="addCustomer.name"></el-input>
+							</el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">* 客户名称：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" placeholder="请输入客户名称,2-20字" v-model="addCustomer.customerName"></el-input>
+							</el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">* 行业：</span>
+							</el-col>
+							<el-col :span="18">
+                                <el-select style="width: 100%;" size="small" v-model="addCustomer.industry" placeholder="选择行业">
+									<el-option
+									  v-for="item in addCustomer.industryOptions"
+									  :key="item.value"
+									  :label="item.label"
+									  :value="item.value">
+									</el-option>
+								</el-select>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">客户等级：</span>
+							</el-col>
+							<el-col :span="18">
+                                <el-select style="width: 100%;" size="small" v-model="addCustomer.customerLevel" placeholder="请选择客户等级">
+									<el-option
+									  v-for="item in addCustomer.levelOptions"
+									  :key="item.value"
+									  :label="item.label"
+									  :value="item.value">
+									</el-option>
+								</el-select>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">销售区域：</span>
+							</el-col>
+							<el-col :span="18">
+                                <el-select style="width: 100%;" size="small" v-model="addCustomer.salesArea" placeholder="默认全国">
+									<el-option
+									  v-for="item in addCustomer.salesAreaOptions"
+									  :key="item.value"
+									  :label="item.label"
+									  :value="item.value">
+									</el-option>
+								</el-select>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">客户经理：</span>
+							</el-col>
+							<el-col :span="18">
+                                <el-select style="width: 100%;" size="small" v-model="addCustomer.customerManager" placeholder="请选择客户经理">
+									<el-option
+									  v-for="item in addCustomer.customerManagerOptions"
+									  :key="item.value"
+									  :label="item.label"
+									  :value="item.value">
+									</el-option>
+								</el-select>
+                            </el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">座机：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" placeholder="请输入座机号码" v-model="addCustomer.landline"></el-input>
+							</el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">备注：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input type="textarea" :rows="3" size="small" placeholder="备注500字之间" v-model="addCustomer.note"></el-input>
+							</el-col>
+						</el-row>
+						<el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">账号：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" placeholder="请输入账号" v-model="addCustomer.no"></el-input>
+							</el-col>
+						</el-row>
+                        <el-row style="margin-top: 20px;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">密码：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" type="password" placeholder="请输入初始密码" v-model="addCustomer.password"></el-input>
+							</el-col>
+                        </el-row>
+                        <el-row style="margin: 20px 0;">
+							<el-col :span="6">
+								<span style="line-height: 32px;float: right;font-size: 12px;" class="el-form-item__label">确认密码：</span>
+							</el-col>
+							<el-col :span="18">
+								<el-input size="small" type="password" placeholder="请输入确认密码" v-model="addCustomer.confirmPassWord"></el-input>
+							</el-col>
+						</el-row>
+					</el-col>
+				</el-row>
+				<span slot="footer" class="dialog-footer">
+					<el-button size="small" @click="addCustomer.state = false">取 消</el-button>
+					<el-button size="small" type="primary" @click="addUserInfo">保 存</el-button>
+				</span>
+				</el-dialog>
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		[#include "/admin/common/footer.html"]
+
+		<!-- Control Sidebar -->
+		[#include "/admin/common/aside.html"]
+
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- jQuery 2.2.3 -->
+	<script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+	<!-- AdminLTE App -->
+	<script src="${siteurl}dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="${siteurl}dist/js/list.js"></script>
+
+	<script src="${siteurl}plugins/bootstrap-zTree/bootstrap-treeview.min.js"></script>
+	<script src="${siteurl}plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var contentWrapperHeight = $(".content-wrapper").height();
+			var contentWrapperWidth = $(".content-wrapper").width();
+			var navigationHeight = $(".navigation").height();
+			var mainHeaderHeight = $(".main-header").height();
+			var mainFooterHeight = $(".main-footer").height();
+			var mainFooterPaddingTop = $(".main-footer").css("padding-top");
+			var mainFooterPaddingBottom = $(".main-footer").css("padding-bottom");
+			var height = contentWrapperHeight - navigationHeight - mainHeaderHeight - mainFooterHeight - parseInt(mainFooterPaddingTop) - parseInt(mainFooterPaddingBottom) - 31;
+			console.log(contentWrapperHeight, navigationHeight, mainHeaderHeight, mainFooterHeight, mainFooterPaddingTop, mainFooterPaddingBottom);
+			$(".goods").height(height);
+		});
+	</script>
+
+	<!-- import Vue before Element -->
+	<script src="${siteurl}plugins/vue-element/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="${siteurl}plugins/vue-element/element.js"></script>
+
+	<script>
+        var nameOptions = [{
+                        value: '选项1',
+                        label: '黄金糕'
+                        }, {
+                        value: '选项2',
+                        label: '双皮奶'
+                        }, {
+                        value: '选项3',
+                        label: '蚵仔煎'
+                        }, {
+                        value: '选项4',
+                        label: '龙须面'
+                        }, {
+                        value: '选项5',
+                        label: '北京烤鸭'
+                        }];
+		var customerLocationOptions = [{
+          value: 'zhinan',
+          label: '指南',
+          children: [{
+            value: 'shejiyuanze',
+            label: '设计原则',
+            children: [{
+              value: 'yizhi',
+              label: '一致'
+            }, {
+              value: 'fankui',
+              label: '反馈'
+            }, {
+              value: 'xiaolv',
+              label: '效率'
+            }, {
+              value: 'kekong',
+              label: '可控'
+            }]
+          }, {
+            value: 'daohang',
+            label: '导航',
+            children: [{
+              value: 'cexiangdaohang',
+              label: '侧向导航'
+            }, {
+              value: 'dingbudaohang',
+              label: '顶部导航'
+            }]
+          }]
+        }, {
+          value: 'zujian',
+          label: '组件',
+          children: [{
+            value: 'basic',
+            label: 'Basic',
+            children: [{
+              value: 'layout',
+              label: 'Layout 布局'
+            }, {
+              value: 'color',
+              label: 'Color 色彩'
+            }, {
+              value: 'typography',
+              label: 'Typography 字体'
+            }, {
+              value: 'icon',
+              label: 'Icon 图标'
+            }, {
+              value: 'button',
+              label: 'Button 按钮'
+            }]
+          }, {
+            value: 'form',
+            label: 'Form',
+            children: [{
+              value: 'radio',
+              label: 'Radio 单选框'
+            }, {
+              value: 'checkbox',
+              label: 'Checkbox 多选框'
+            }, {
+              value: 'input',
+              label: 'Input 输入框'
+            }, {
+              value: 'input-number',
+              label: 'InputNumber 计数器'
+            }, {
+              value: 'select',
+              label: 'Select 选择器'
+            }, {
+              value: 'cascader',
+              label: 'Cascader 级联选择器'
+            }, {
+              value: 'switch',
+              label: 'Switch 开关'
+            }, {
+              value: 'slider',
+              label: 'Slider 滑块'
+            }, {
+              value: 'time-picker',
+              label: 'TimePicker 时间选择器'
+            }, {
+              value: 'date-picker',
+              label: 'DatePicker 日期选择器'
+            }, {
+              value: 'datetime-picker',
+              label: 'DateTimePicker 日期时间选择器'
+            }, {
+              value: 'upload',
+              label: 'Upload 上传'
+            }, {
+              value: 'rate',
+              label: 'Rate 评分'
+            }, {
+              value: 'form',
+              label: 'Form 表单'
+            }]
+          }, {
+            value: 'data',
+            label: 'Data',
+            children: [{
+              value: 'table',
+              label: 'Table 表格'
+            }, {
+              value: 'tag',
+              label: 'Tag 标签'
+            }, {
+              value: 'progress',
+              label: 'Progress 进度条'
+            }, {
+              value: 'tree',
+              label: 'Tree 树形控件'
+            }, {
+              value: 'pagination',
+              label: 'Pagination 分页'
+            }, {
+              value: 'badge',
+              label: 'Badge 标记'
+            }]
+          }, {
+            value: 'notice',
+            label: 'Notice',
+            children: [{
+              value: 'alert',
+              label: 'Alert 警告'
+            }, {
+              value: 'loading',
+              label: 'Loading 加载'
+            }, {
+              value: 'message',
+              label: 'Message 消息提示'
+            }, {
+              value: 'message-box',
+              label: 'MessageBox 弹框'
+            }, {
+              value: 'notification',
+              label: 'Notification 通知'
+            }]
+          }, {
+            value: 'navigation',
+            label: 'Navigation',
+            children: [{
+              value: 'menu',
+              label: 'NavMenu 导航菜单'
+            }, {
+              value: 'tabs',
+              label: 'Tabs 标签页'
+            }, {
+              value: 'breadcrumb',
+              label: 'Breadcrumb 面包屑'
+            }, {
+              value: 'dropdown',
+              label: 'Dropdown 下拉菜单'
+            }, {
+              value: 'steps',
+              label: 'Steps 步骤条'
+            }]
+          }, {
+            value: 'others',
+            label: 'Others',
+            children: [{
+              value: 'dialog',
+              label: 'Dialog 对话框'
+            }, {
+              value: 'tooltip',
+              label: 'Tooltip 文字提示'
+            }, {
+              value: 'popover',
+              label: 'Popover 弹出框'
+            }, {
+              value: 'card',
+              label: 'Card 卡片'
+            }, {
+              value: 'carousel',
+              label: 'Carousel 走马灯'
+            }, {
+              value: 'collapse',
+              label: 'Collapse 折叠面板'
+            }]
+          }]
+        }, {
+          value: 'ziyuan',
+          label: '资源',
+          children: [{
+            value: 'axure',
+            label: 'Axure Components'
+          }, {
+            value: 'sketch',
+            label: 'Sketch Templates'
+          }, {
+            value: 'jiaohu',
+            label: '组件交互文档'
+          }]
+        }];
+		var vm = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					search: {
+						name: '',
+						level: '',
+						levelOptions: [],
+						area: '',
+						areaOptions: [],
+						manager: '',
+						managerOptions: [],
+						time: '',
+						label: '',
+						labelOptions: [],
+						no: 1,
+						size: 10
+					},
+					searchObject_address: {
+						name: '',
+						no: 1,
+						size: 10
+					},
+					addressOptions: customerLocationOptions,
+					form_address: {
+						user: '',
+						name: '',
+						phone: '',
+						tel: '',
+						address: '',
+						detailedAddress: '',
+						code: '',
+						defaultState: ''
+					},
+					form_rules: {
+						name: [
+							{ required: true, message: '请输入收货人姓名' },
+							{ min: 2, max: 32, message: '长度在 2 到 32 个字符'}
+						],
+						address: [
+							{ required: true, message: '请选择收货地址', trigger: 'change' }
+						],
+						detailedAddress: [
+							{ required: true, message: '请输入详细地址'}
+						]
+					},
+					label: {
+                        title: '',
+                        state: false,
+                        name: '',
+                        nameOptions
+                    },
+                    viewLableState: false,
+                    viewLableList: ['新户1', '新户2', '新户3'],
+                    userInfo: {
+                        state: false,
+						initialIndex: '0'
+                    },
+					userInfoState: true,
+                    addCustomer: {
+                        state: false,
+                        phone: '',
+                        name: '',
+                        customerName: '',
+                        industry: '',
+                        industryOptions: nameOptions,
+                        customerLevel: '',
+                        levelOptions: nameOptions,
+                        salesArea: '',
+                        salesAreaOptions: nameOptions,
+                        customerManager: '',
+                        customerManagerOptions: nameOptions,
+                        note: '',
+                        no: '',
+                        password: '',
+                        confirmPassWord: ''
+                    },
+					tableData: {
+						list: [{
+							name: '贾魁'
+						}]
+					},
+					address: {
+						title: '',
+						tableData: {
+							list: []
+						},
+						addAddressState: false
+					},
+					order: {
+						list: [{
+							name: '贾魁'
+						}]
+					},
+					coupons: {
+						couponsCode: '',
+						tableData: {
+							list: [{
+								name: '贾魁'
+							}]
+						},
+						chooseCoupons: false,
+						chooseCouponsData: {
+							list: [{
+								name: '贾魁'
+							}]
+						}
+					},
+					orderCode: '',
+					modifyUserInfo: {
+						id: '',
+						phone: '',
+						name: '',
+						customerName: '',
+						customerLocation: '',
+						customerLocationOptions,
+						customStore: '',
+						loginName: '',
+						customerLevel: '',
+						levelOptions: nameOptions,
+						salesArea: '',
+						salesAreaOptions: nameOptions,
+						customerManager: '',
+						customerManagerOptions: nameOptions,
+						landline: '',
+						customerLabel: '',
+						customerLabelOptions: nameOptions,
+						note: '',
+						email: '',
+						detailedAddress: ''
+					},
+					addressId: []
+				}
+			},
+			created(){},
+			mounted: function () {
+				// 获取客户数据
+				this.getUserInfo()
+			},
+			methods: {
+				// 修改地址
+				updateAddress(row) {
+					console.log(row);
+					this.address.addAddressState = true;
+					this.address.title = '编辑收货地址';
+					this.form_address = row;
+					this.form_address.user = row.id;
+				},
+				// 获取用户地址
+				getUserAddress() {
+					let that = this, data = this.searchObject_address;
+					$.post("${siteurl}tenantRest/customeraddress/search.htm", data,function(res){
+						if(res.code==0){
+							console.log(res);
+							that.address.tableData = res;
+						}
+					});
+				},
+				// 搜索
+				searchUserInfo() {
+					this.search.no = 1;
+					this.getUserInfo();
+				},
+				// 修改用户信息
+				modifyUserInfos() {
+					var that = this, 
+					data = {
+						id: this.modifyUserInfo.id,
+						name: this.modifyUserInfo.name,
+						phone: this.modifyUserInfo.phone,
+						shop: this.modifyUserInfo.customerName};
+					$.post("${siteurl}tenantRest/customer/update.htm", data,function(res){
+						if(res.code==0){
+							console.log(res);
+							that.userInfoState = true;
+							that.getUserInfo()
+							that.$message({
+							message: '修改用户成功',
+							type: 'success'
+							});
+						} else {
+							that.$message.error(''+res.msg);
+						}
+					});
+				},
+				// 打开用户信息
+				openUserInfo(row) {
+					console.log(row);
+					this.userInfo.state = true;
+					this.userInfo.initialIndex = '0';
+					this.modifyUserInfo.name = row.name;
+					this.modifyUserInfo.phone = row.phone;
+					this.modifyUserInfo.customerLevel = row.level;
+					this.modifyUserInfo.customerName = row.shop;
+					this.modifyUserInfo.id = row.id;
+
+					// 获取用户地址
+					this.searchObject_address.name = row.name;
+					this.form_address.user = row.id;
+					this.getUserAddress();
+				},
+				// 删除人员信息
+				delectUserInfo(index, id) {
+					console.log(index,id);
+					var that = this, data = {id: id};
+					$.post("${siteurl}tenantRest/customer/delete.htm", data,function(res){
+						if(res.code==0){
+							console.log(res);
+							that.getUserInfo()
+							that.$message({
+							message: '删除用户成功',
+							type: 'success'
+							});
+						} else {
+							that.$message.error(''+res.msg);
+						}
+					}); 
+				},
+				// 获取客户数据
+				getUserInfo() {
+					var that = this, data = that.search;
+					$.post("${siteurl}tenantRest/customer/search.htm", data,function(res){
+						if(res.code==0){
+							console.log(res);
+							that.tableData = res;
+						}
+					}); 
+				},
+				// 添加用户
+				addUserInfo() {
+					var that = this, data = that.addCustomer;
+					$.post("${siteurl}tenantRest/customer/create.htm", data,function(res){
+						console.log(res);
+						if(res.code==0){
+							that.$message({
+							message: '用户添加成功',
+							type: 'success'
+							});
+							that.addCustomer.state = false;
+							that.getUserInfo();
+						} else {
+							that.$message.error(''+res.msg);
+						}
+					});
+				},
+				filterHandler(value, row, column) {
+					const property = column['property'];
+					return row[property] === value;
+				},
+				shutDownClose(done) {
+					done();
+					this.addCustomer.state = false;
+				},
+				shutDown() {
+					this.addCustomer.state = false;
+				},
+				// 添加标签
+				addLabel() {},
+				// 人员分页
+				tableDataChange(index) {
+					this.search.no = index;
+					this.getUserInfo();
+				},
+				addressSelectionChange(val) {
+					console.log(val);
+					val.forEach(item => {
+						this.addressId.push(item.id);
+					});
+				},
+				// 添加地址
+				addAddress() {
+					var that = this, data = this.form_address;
+					this.$refs['form_address'].validate((valid) => {
+						if (valid) {
+							if(that.address.title != '新增收货地址') {
+								$.post({url:"${siteurl}tenantRest/customeraddress/update.htm", data, success:function(result){
+									if(result.code == 0) {
+										that.$message({
+										message: '修改成功',
+										type: 'success'
+										});
+										that.$refs['form_address'].resetFields();
+										that.address.addAddressState = false;
+										that.getUserAddress();
+									} else {
+										that.$message.error(''+result.msg);
+									}
+								}});
+							} else {
+								$.post({url:"${siteurl}tenantRest/customeraddress/create.htm", data, success:function(result){
+									if(result.code == 0) {
+										that.$message({
+										message: '添加成功',
+										type: 'success'
+										});
+										that.$refs['form_address'].resetFields();
+										that.address.addAddressState = false;
+										that.searchObject_address.no = 1;
+										that.getUserAddress();
+									} else {
+										that.$message.error(''+result.msg);
+									}
+								}});
+							}
+						} else {
+							console.log('error submit!!');
+							return false;
+						}
+					});
+				},
+				// 删除地址
+				delectAddress(id) {
+					var that = this, data = {id};
+					$.post({url:"${siteurl}tenantRest/customeraddress/delete.htm", data, success:function(result){
+						if(result.code == 0) {
+							that.$message({
+							message: '删除成功',
+							type: 'success'
+							});
+							that.getUserAddress();
+						} else {
+							that.$message.error(''+res.msg);
+						}
+					}});
+				},
+				// 获取选中人员
+				handleSelectionChange(val) {
+					console.log(val);
+				},
+				// 关闭弹出框
+				handleClose(event) {
+					this[event] = false;
+				}
+			}
+		})
+	</script>
+</body>
+</html>

@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>配送司机</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    [#include "/tenant/common/site.html"]
+    [@baseCss /]
+</head>
+<style>
+    .content {
+        padding: 0;
+    }
+
+    /* 导航 */
+    .navigation {
+        height: 60px;
+        line-height: 60px;
+        background-color: #f9f9f9;
+        font-size: 14px;
+        color: #666666;
+        padding-left: 16px;
+    }
+
+    .navigation i {
+        color: #d9dee5;
+    }
+
+    .navigation span {
+        font-weight: 700;
+    }
+
+    h5 {
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+        margin: 10px 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: #666;
+    }
+
+    /* 主页 */
+    .home {
+        padding: 0 10px;
+        background-color: #f9f9f9;
+        overflow: auto;
+    }
+    
+    /* 交易看板 */
+    .trading, .core, .goods, .KM {
+        padding: 10px 20px;
+        background-color: #fff;
+    }
+
+    /* 时间 */
+    .time {
+        padding: 10px 14px;
+        border: 1px dashed #e9e9e9;
+        overflow: hidden;
+    }
+
+    .time .time_l {
+        float: left;
+        line-height: 30px;
+    }
+
+    .time .time_l .timeItem {
+        font-size: 10px;
+        color: #666666;
+        padding-right: 14px;
+        margin-right: 14px;
+        border-right: 1px solid #898989;
+        display: inline-block;
+        cursor: pointer;
+        line-height: 10px;
+    }
+
+    .time .time_l .curren {
+        color: #5491de;
+    }
+
+    .time .time_r {
+        float: left;
+    }
+
+    .time .time_r .timeItem {
+        font-size: 10px;
+        display: inline-block;
+        padding: 0 20px;
+        line-height: 30px;
+        color: #666666;
+        border: 1px solid #d9d9d9;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .time .time_r .curren {
+        color: #5491de;
+        border-color: #5491de;
+    }
+
+    .tradingPrice {
+        margin-top: 20px;
+    }
+
+    .tradingPrice ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        overflow: hidden;
+    }
+
+    .tradingPrice li {
+        float: left;
+        width: 20%;
+        text-align: center;
+        height: 120px;
+        border: 1px solid #e9e9e9;
+        font-size: 14px;
+        border-left: 0;
+        cursor: pointer;
+        box-sizing: border-box;
+        color: #999999;
+    }
+
+    .tradingPrice li p:first-child {
+        margin-top: 35px;
+        margin-bottom: 0;
+    }
+
+    .tradingPrice li p:last-child {
+        color: #f74d4d;
+        font-size: 24px;
+    }
+
+    .tradingPrice li:first-child {
+        border-left: 1px solid #e9e9e9;
+    }
+
+    .tradingPrice .curren {
+        border-color: #5491de;
+        border-left: 1px solid #5491de;
+    }
+
+    .tradingPrice .curren:first-child {
+        border-color: #5491de;
+        border-left-color: #5491de;
+    }
+
+    /* 金额折线图的切换栏 */
+    .tradingPriceEchartsTitle {
+        font-size: 12px;
+        color: #ccc;
+        text-align: center;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .tradingPriceEchartsTitle .dataView {
+        position: absolute;
+        right: 20px;
+        bottom: -20px;
+        font-size: 12px;
+        color: #5491de;
+        cursor: pointer;
+    }
+
+    .tradingPriceEchartsTitle .dataView i {
+        font-size: 16px;
+    }
+
+    .tradingPriceEchartsTitle .dataView p {
+        color: #fff;
+    }
+
+    .tradingPriceEchartsTitle .dataView:hover p {
+        color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle ul {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .tradingPriceEchartsTitle li {
+        float: left;
+        position: relative;
+        margin-right: 45px;
+        cursor: pointer;
+    }
+
+    .tradingPriceEchartsTitle li::after {
+        position: absolute;
+        left: -40px;
+        top: 50%;
+        content: '';
+        display: inline-block;
+        width: 30px;
+        height: 1px;
+        background-color: #ccc;
+    }
+
+    .tradingPriceEchartsTitle li::before {
+        position: absolute;
+        left: -33px;
+        top: 10%;
+        content: '';
+        display: inline-block;
+        width: 15px;
+        z-index: 1;
+        height: 15px;
+        background-color: #fff;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+    }
+
+    .tradingPriceEchartsTitle .curren {
+        color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle .curren::after {
+        background-color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle .curren::before {
+        background-color: #5491de;
+        border: 1px solid #5491de;
+    }
+
+    .tradingPriceEchartsTitle .pricedataView {
+        padding: 0 50px;
+    }
+
+    /* 核心看板 */
+    .coreData {
+        overflow: hidden;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .earnings, .cost {
+        padding: 0 40px;
+    }
+
+    .earningsPrice {
+
+    }
+
+    .earningsPrice ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        overflow: hidden;
+    }
+
+    .earningsPrice li {
+        float: left;
+        width: 50%;
+        text-align: center;
+        height: 120px;
+        border: 1px solid #e9e9e9;
+        font-size: 14px;
+        border-left: 0;
+        cursor: pointer;
+        box-sizing: border-box;
+        color: #999999;
+        padding: 20px 0;
+    }
+
+    .earningsPrice li b {
+        font-weight: 400;
+        margin-left: 10px;
+    }
+
+    .earningsPrice li p {
+        margin-bottom: 0;
+    }
+
+    .earningsPrice li div {
+        color: #f74d4d;
+        font-size: 24px;
+    }
+
+    .earningsPrice li:first-child {
+        border-left: 1px solid #e9e9e9;
+    }
+
+    .earningsPrice .curren {
+        border-color: #5491de;
+        border-left: 1px solid #5491de;
+    }
+
+    .earningsPrice .curren:first-child {
+        border-color: #5491de;
+        border-left-color: #5491de;
+    }
+
+    /* 商品板块 */
+    .goods .earnings ul {
+        padding: 5px 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .goods h5 {
+        border-bottom: 1px solid #e9e9e9;
+    }
+
+    .goods .earnings li {
+        overflow: hidden;
+        font-size: 14px;
+        color: #6e6e6e;
+        position: relative;
+        margin-top: 10px;
+    }
+
+    .goods .earnings li i {
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        border-radius: 50%;
+        font-style: normal;
+        background-color: #f4f4f4;
+        color: #6e6e6e;
+        text-align: center;
+        float: left;
+    }
+
+    .goods .earnings .li1 i {
+        background-color: #5491de;
+        color: #fff;
+    }
+
+    .goods .earnings .li2 i {
+        background-color: #88b2e8;
+        color: #fff;
+    }
+
+    .goods .earnings .li3 i {
+        background-color: #bbd3f2;
+        color: #fff;
+    }
+
+    .goods .earnings p {
+        position: absolute;
+        left: 0;
+        top: 0;
+        line-height: 25px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 50px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow:ellipsis;
+    }
+
+    .goods .earnings span {
+        float: right;
+    }
+
+    /* 千米指数看板 */
+    .KM p{
+        margin: 0;
+        height: 44px;
+        line-height: 44px;
+        border: 1px solid #dfeaf9;
+        background-color: #f2f6fc;
+        font-size: 12px;
+        padding-left: 12px;
+        box-sizing: border-box;
+        color: #999999;
+        border-radius: 3px;
+    }
+
+    h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    h1 {
+        height: 20px;
+        margin: 0;
+    }
+
+    .el-table__row>td{
+        border: none;
+    }
+    .el-table::before {
+        height: 0px;
+    }
+
+    .el-table td, .el-table th.is-leaf {
+        border: 0;
+    }
+
+    [v-cloak]{
+        display: none;
+    }
+</style>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Header Navbar: style can be found in header.less -->
+        [#include "/admin/common/nav.html"]
+    </header>
+
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            [@user_panel /]
+            <!-- search form -->
+            [@sidebar_form /]
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">主面板</li>
+                [@menustag id=1]
+                [#list list as item]
+                [@menu item "1,104,105"]
+                [/@menu]
+                [/#list]
+                [/@menustag]
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+
+            <!-- 导航 -->
+            <div class="navigation">
+                数据 <i> / </i> <span>数据概况</span>
+            </div>
+
+            <!-- 主体 -->
+             <div class="home" id="app" v-cloak>
+
+                 <!-- 交易看板 -->
+                 <div class="trading">
+                    <h5>交易看板</h5>
+
+                     <!-- 交易时间 -->
+                     <div class="time">
+                         <div class="time_l">
+                            <span v-for="(item, index) in trading.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="timeToggle(index)">{{item.text}}</span>
+                         </div>
+                         <div class="time_r" v-for="(item, idx) in trading.time" :key="idx" v-if="item.state">
+                            <span v-for="(item, index) in item.children.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="childrenTimeToggle(idx, index)">{{ item.text }}</span>
+                            <el-date-picker
+                            value-format="yyyy-MM-dd"
+                            v-if="trading.time[0].state"
+                            style="vertical-align: middle;"
+                            v-model="trading.dayValue"
+                            size="small"
+                            type="daterange"
+                            @change="getTime"
+                            range-separator="~"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                            </el-date-picker>
+                            <el-date-picker
+                            v-if="trading.time[1].state"
+                            style="vertical-align: middle;"
+                            v-model="trading.monthValue"
+                            size="small"
+                            value-format="yyyy-MM-dd"
+                            type="monthrange"
+                            @change="getMonthTime"
+                            range-separator="~"
+                            start-placeholder="开始月份"
+                            end-placeholder="结束月份">
+                            </el-date-picker>
+                        </div>
+                     </div>
+
+                     <!-- 交易金额 -->
+                     <div class="tradingPrice">
+                         <ul>
+                             <li v-for="(item, index) in trading.tradingPriceList" :key="index" :class="[item.state ? 'curren' : '']" @click="tradingPriceToggle(index)">
+                                 <p>{{item.title}} <i class="el-icon-info"></i></p>
+                                 <p>{{item.price}}</p>
+                             </li>
+                         </ul>
+                     </div>
+
+                     <!-- 金额折线图的切换栏 -->
+                     <div class="tradingPriceEchartsTitle" v-show="!trading.tradingState">
+                         <ul>
+                             <li v-for="(item, index) in trading.tradingPriceList" :key="index" :class="[item.state ? 'curren' : '']" @click="tradingPriceToggle(index)">{{item.simplifyTitle}}</li>
+                         </ul>
+                         <div class="dataView" @click="tradingToggle">
+                            <i class="el-icon-document"></i>
+                            <p>数据视图</p>
+                         </div>
+                     </div>
+
+                     <!-- 金额折线图 -->
+                     <div class="tradingPriceEcharts" style="width: 100%;height: 500px;" v-show="!trading.tradingState"></div>
+
+                     <div class="pricedataView" v-show="trading.tradingState">
+                         <h4>数据视图</h4>
+                         <el-table
+                            :data="trading.tableData"
+                            height="300"
+                            size="small"
+                            style="width: 100%">
+                            <el-table-column
+                            prop="date"
+                            header-align="center"
+                            align="center"
+                            label="日期">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="name"
+                            label="订单总数"
+                            width="180">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="交易额（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="退款金额（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="客单价（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="成交转换率">
+                            </el-table-column>
+                        </el-table>
+                        <div style="margin: 20px 0;text-align: right;">
+                            <el-button size="mini" type="danger" @click="tradingToggle">关闭</el-button>
+                        </div>
+                     </div>
+                 </div>
+
+                 <h1></h1>
+
+                 <!-- 核心看板 -->
+                 <div class="core">
+                    <h5>核心看板</h5>
+
+                    <!-- 核心时间 -->
+                    <div class="time">
+                        <div class="time_r">
+                           <span v-for="(item, index) in core.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="coreTimeToggle(index)">{{ item.text }}</span>
+                           <el-date-picker
+                           style="vertical-align: middle;"
+                           v-model="core.dayValue"
+                           size="small"
+                           type="daterange"
+                           range-separator="~"
+                           start-placeholder="开始日期"
+                           end-placeholder="结束日期">
+                           </el-date-picker>
+                       </div>
+                    </div>
+
+                    <div class="coreData">
+                        <el-col :span="12">
+                            <div class="earnings">
+                                <h5>收益看板</h5>
+
+                                <!-- 收益金额 -->
+                                <div class="earningsPrice">
+                                    <ul>
+                                        <li v-for="(item, index) in core.earnings.list" :key="index" :class="[item.state ? 'curren' : '']" @click="earningsToggle(index)">
+                                            <p>{{item.title}} <i class="el-icon-info"></i></p>
+                                            <div>{{item.price}}</div>
+                                            <p>{{item.growthText}} <b>{{item.growthRate}}</b> <i class="el-icon-top"></i></p>
+                                        </li>
+                                    </ul>
+
+                                    <!-- 收益折线图 -->
+                                    <div class="earningsPriceEcharts" style="margin-top: 20px;width: 100%;height: 300px;"></div>
+                                </div>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="cost">
+                                <h5>成本看板</h5>
+
+                                <!-- 成本金额 -->
+                                <div class="earningsPrice">
+                                    <ul>
+                                        <li v-for="(item, index) in core.cost.list" :key="index" :class="[item.state ? 'curren' : '']" @click="costToggle(index)">
+                                            <p>{{item.title}} <i class="el-icon-info"></i></p>
+                                            <div>{{item.price}}</div>
+                                            <p>{{item.growthText}} <b>{{item.growthRate}}</b> <i class="el-icon-top"></i></p>
+                                        </li>
+                                    </ul>
+
+                                    <!-- 收益折线图 -->
+                                    <div class="costPriceEcharts" style="margin-top: 20px;width: 100%;height: 300px;"></div>
+                                </div>
+                            </div>
+                        </el-col>
+                    </div>
+                 </div>
+
+                 <h1></h1>
+
+                 <!-- 商品看板 -->
+                 <div class="goods">
+                    <h5>商品看板</h5>
+
+                    <!-- 商品时间 -->
+                    <div class="time">
+                        <div class="time_l">
+                           <span v-for="(item, index) in trading.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="timeToggle(index)">{{item.text}}</span>
+                        </div>
+                        <div class="time_r" v-for="(item, idx) in trading.time" :key="idx" v-if="item.state">
+                           <span v-for="(item, index) in item.children.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="childrenTimeToggle(idx, index)">{{ item.text }}</span>
+                           <el-date-picker
+                           v-if="trading.time[0].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.dayValue"
+                           size="small"
+                           type="daterange"
+                           range-separator="~"
+                           start-placeholder="开始日期"
+                           end-placeholder="结束日期">
+                           </el-date-picker>
+                           <el-date-picker
+                           v-if="trading.time[1].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.monthValue"
+                           size="small"
+                           type="monthrange"
+                           range-separator="~"
+                           start-placeholder="开始月份"
+                           end-placeholder="结束月份">
+                           </el-date-picker>
+                       </div>
+                    </div>
+
+                    <div class="coreData">
+                        <el-col :span="12">
+                            <div class="earnings goodsRanking">
+                                <h5>商品销售TOP5 SKU排名</h5>
+
+                                <!-- 商品排名 -->
+                                <ul>
+                                    <li v-for="(item, index) in goods.goodsRankingList" :key="index" :class="[index == 0 ? 'li1' : (index == 1 ? 'li2' : (index == 2 ? 'li3' : ''))]"><i>{{ index }}</i><p>{{ item.text }}</p><span>{{ item.price }}</span></li>
+                                </ul>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="earnings salesRanking">
+                                <h5>库存占有资金TOP5 SKU排名</h5>
+
+                                <!-- 库存排名 -->
+                                <ul>
+                                    <li v-for="(item, index) in goods.salesRankingList" :key="index" :class="[index == 0 ? 'li1' : (index == 1 ? 'li2' : (index == 2 ? 'li3' : ''))]"><i>{{ index }}</i><p>{{ item.text }}</p><span>{{ item.price }}</span></li>
+                                </ul>
+                            </div>
+                        </el-col>
+                    </div>
+                 </div>
+
+                 <h1></h1>
+
+                 <!-- 千米指数看板 -->
+                 <div class="KM">
+                    <h5>千米指数 <i class="el-icon-info"></i></h5>
+
+                    <p>千米指数是千米网对照行业平均水平和先进水平，从企业销售、客户、产品、财务等几个纬度，评估企业实际经营能力，若您的店铺未开启仓储部，千米指数无法核算</p>
+
+                    <div class="KMData" style="width: 100%;height: 550px;"></div>
+                 </div>
+             </div>
+            <!-- /.box -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    [#include "/admin/common/footer.html"]
+
+    <!-- Control Sidebar -->
+    [#include "/admin/common/aside.html"]
+
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+[@baseScript /]
+
+<script src="${siteurl}dist/js/echarts.js"></script>
+
+<script>
+    var vm = new Vue({
+      el: '#app',
+      data: function() {
+        return {
+            searchObject_trading: {
+                beginDate: '',
+                endDate: ''
+            },
+            trading: {
+                time: [
+                    {
+                        type: 'day',
+                        text: '按日',
+                        state: true,
+                        children: {
+                            time: [
+                                {
+                                    text: '昨日',
+                                    state: false,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                                {
+                                    text: '近7日',
+                                    state: true,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                                {
+                                    text: '近30日',
+                                    state: false,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                            ],
+                            startTimeText: '开始时间',
+                            endTimeText: '结束时间',
+                            timeType: 'date',
+                            timeValue: 'timeValue'
+                        }
+                    },
+                    {
+                        type: 'month',
+                        text: '按月',
+                        state: false,
+                        children: {
+                            time: [
+                                {
+                                    text: '当月',
+                                    state: false,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                                {
+                                    text: '近3月',
+                                    state: true,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                                {
+                                    text: '近半年',
+                                    state: false,
+                                    startTime: '',
+                                    endTime: ''
+                                },
+                            ],
+                            startTimeText: '开始月份',
+                            endTimeText: '结束月份',
+                            timeType: 'year',
+                            timeValue: 'timeValue'
+                        }
+                    }
+                ],
+                dayValue: '',
+                monthValue: '',
+                tradingPriceList: [
+                    {
+                        title: '订单总数',
+                        price: '0',
+                        simplifyTitle: '订单总数',
+                        state: true
+                    },
+                    {
+                        title: '交易额（元）',
+                        price: '￥0',
+                        simplifyTitle: '交易额（元）',
+                        state: false
+                    },
+                    {
+                        title: '退款金额（元）',
+                        price: '￥0',
+                        simplifyTitle: '退款金额（元）',
+                        state: false
+                    },
+                    {
+                        title: '日均客单价（元）',
+                        price: '￥0',
+                        simplifyTitle: '客单价（元）',
+                        state: false
+                    },
+                    {
+                        title: '日均成交转换率',
+                        price: '0%',
+                        simplifyTitle: '成交转换率',
+                        state: false
+                    }
+                ],
+                tradingPriceOption: {
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#f9f9f9',
+                                color: '#666'
+                            }
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['2019-10', '2019-12', '2019-11', '2019-12', '2020-01', '2020-02', '2020-03']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            nameTextStyle: {
+                                color: '#000',
+                                backgroundColor: '#fff'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '搜索引擎1',
+                            type: 'line',
+                            stack: '总量',
+                            smooth: 0.5,
+                            label: {
+                                show: false
+                            },
+                            itemStyle: {
+                                color: '#5491de'
+                            },
+                            lineStyle: {
+                                color: '#5491de'
+                            },
+                            areaStyle: {
+                                color: '#5491de',
+                                opacity: 1
+                            },
+                            emphasis: {
+                                label: {
+                                    color: '#fff',
+                                },
+                                itemStyle: {
+                                    color: '#5491de',
+                                    borderColor: "#fff",
+                                    borderWidth: 2
+                                }
+                            },
+                            data: [0, 932, 901, 934, 0, 0, 0]
+                        }
+                    ]
+                },
+                tableData: [{
+                    date: '2016-05-03',
+                    name: '74',
+                    address: '33'
+                    }, {
+                    date: '2016-05-02',
+                    name: '88',
+                    address: '99'
+                    }, {
+                    date: '2016-05-04',
+                    name: '78',
+                    address: '878'
+                    }, {
+                    date: '2016-05-01',
+                    name: '87',
+                    address: '87'
+                    }, {
+                    date: '2016-05-08',
+                    name: '87',
+                    address: '578'
+                    }, {
+                    date: '2016-05-06',
+                    name: '5',
+                    address: '5'
+                    }, {
+                    date: '2016-05-07',
+                    name: '0',
+                    address: '1'
+                    }
+                ],
+                tradingState: false
+            },
+            core: {
+                time: [
+                    {
+                        text: '昨日',
+                        state: false
+                    },
+                    {
+                        text: '近7日',
+                        state: true
+                    },
+                    {
+                        text: '近30日',
+                        state: false
+                    }
+                ],
+                dayValue: '',
+                earnings: {
+                    list: [
+                        {
+                            title: '毛利额（元）',
+                            price: '￥0',
+                            growthText: '环比上期',
+                            growthRate: '20%',
+                            state: true
+                        },
+                        {
+                            title: '毛利率',
+                            price: '0%',
+                            growthText: '环比上期',
+                            growthRate: '20%',
+                            state: false
+                        }
+                    ],
+                    earningsOption: {
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['邮件营销', '联盟广告']
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: true,
+                            axisTick: {
+                                show: false
+                            },
+                            axisLine: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                        },
+                        yAxis: {
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            }
+                        },
+                        series: [
+                            {
+                                name: '邮件营销',
+                                type: 'line',
+                                stack: '总量',
+                                data: [120, 132, 101, 134, 90, 230, 210]
+                            },
+                            {
+                                name: '联盟广告',
+                                type: 'line',
+                                stack: '总量',
+                                data: [220, 182, 191, 234, 290, 330, 310]
+                            }
+                        ]
+                    }
+                },
+                cost: {
+                    list: [
+                        {
+                            title: '毛利额（元）',
+                            price: '￥0',
+                            growthText: '环比上期',
+                            growthRate: '20%',
+                            state: true
+                        },
+                        {
+                            title: '毛利率',
+                            price: '0%',
+                            growthText: '环比上期',
+                            growthRate: '20%',
+                            state: false
+                        }
+                    ],
+                    costOption: {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                label: {
+                                    backgroundColor: '#f9f9f9',
+                                    color: '#666'
+                                }
+                            }
+                        },
+                        xAxis: {
+                            type: 'category',
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                        },
+                        yAxis: {
+                            type: 'value',
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                        },
+                        series: [{
+                            data: [120, 200, 150, 80, 70, 110, 130],
+                            type: 'bar',
+                            barMaxWidth: '25%',
+                            itemStyle: {
+                                color: '#3fc9d5'
+                            }
+                        }]
+                    }
+                }
+            },
+            goods: {
+                goodsRankingList: [
+                    {
+                        price: '100元',
+                        text: '测试商品-善味阁 中秋礼盒 鸭舌鸭脖鸭肫鸭掌 1082g'
+                    },
+                    {
+                        price: '90元',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80元',
+                        text: '测试商品-水果时光 黄桃罐头 箱装 410g 410g'
+                    },
+                    {
+                        price: '70元',
+                        text: '客厅沙发组合套装 小户型现代简约三人位整客厅沙发组合套装 小户型现代简约三人位整装家具北欧布艺沙发073 组合 073A(3+右妃)装家具北欧布艺沙发073 组合 073A(3+右妃)'
+                    },
+                    {
+                        price: '60元',
+                        text: '藿香正气水'
+                    }
+                ],
+                salesRankingList: [
+                    {
+                        price: '100元',
+                        text: '测试商品-善味阁 中秋礼盒 鸭舌鸭脖鸭肫鸭掌 1082g'
+                    },
+                    {
+                        price: '90元',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80元',
+                        text: '测试商品-水果时光 黄桃罐头 箱装 410g 410g'
+                    },
+                    {
+                        price: '70元',
+                        text: '客厅沙发组合套装 小户型现代简约三人位整客厅沙发组合套装 小户型现代简约三人位整装家具北欧布艺沙发073 组合 073A(3+右妃)装家具北欧布艺沙发073 组合 073A(3+右妃)'
+                    },
+                    {
+                        price: '60元',
+                        text: '藿香正气水'
+                    }
+                ]
+            },
+            KM: {
+                KMOption: {
+                    legend: {
+                        data: ['我自己', '行业平均值'],
+                        bottom: 40
+                    },
+                    radar: {
+                        name: {
+                            textStyle: {
+                                color: '#898989'
+                            }
+                        },
+                        indicator: [
+                            { name: '毛利率', max: 6500},
+                            { name: '动销率', max: 16000},
+                            { name: '销售人数', max: 30000},
+                            { name: '成交转换率', max: 38000},
+                            { name: '客单价', max: 52000}
+                        ]
+                    },
+                    series: [{
+                        type: 'radar',
+                        data: [
+                            {
+                                value: [4300, 10000, 28000, 35000, 50000],
+                                name: '我自己'
+                            },
+                            {
+                                value: [5000, 14000, 28000, 31000, 42000],
+                                name: '行业平均值'
+                            }
+                        ]
+                    }]
+                }
+            }
+        }
+      },
+      created: function () {
+        var contentWrapperHeight = $(".content-wrapper").height();
+        var navigationHeight = $(".navigation").height();
+        var mainHeaderHeight = $(".main-header").height();
+        var mainFooterHeight = $(".main-footer").height();
+        var mainFooterPaddingTop = $(".main-footer").css("padding-top");
+        var mainFooterPaddingBottom = $(".main-footer").css("padding-bottom");
+        var height = contentWrapperHeight - navigationHeight - mainHeaderHeight - mainFooterHeight - parseInt(mainFooterPaddingTop) - parseInt(mainFooterPaddingBottom) - 1;
+        console.log(contentWrapperHeight, navigationHeight, mainHeaderHeight, mainFooterHeight, mainFooterPaddingTop, mainFooterPaddingBottom);
+        // $(".home").height(height);
+      },
+      mounted: function () {
+        // 初始化trading的时间
+        var day = new Date();
+        var s = day.getFullYear()+"-" + (day.getMonth()+1) + "-" + day.getDate();
+        console.log(s);
+
+        var day1 = new Date();
+        day1.setTime(day1.getTime()-7*24*60*60*1000);
+        var s1 = day1.getFullYear()+"-" + (day1.getMonth()+1) + "-" + day1.getDate();
+        console.log(s1);
+
+        var day2 = new Date();
+        day2.setTime(day2.getTime()-30*24*60*60*1000);
+        var s2 = day2.getFullYear()+"-" + (day2.getMonth()+1) + "-" + day2.getDate();
+        console.log(s2);
+
+        this.trading.time[0].children.time[0].startTime = s;
+        this.trading.time[0].children.time[0].endTime = s;
+        this.trading.time[0].children.time[1].startTime = s1;
+        this.trading.time[0].children.time[1].endTime = s;
+        this.trading.time[0].children.time[2].startTime = s2;
+        this.trading.time[0].children.time[2].endTime = s;
+
+        var s3 = this.getMonthStartDate();
+        console.log(s3);
+
+        var s4 = this.getLast3Month();
+        console.log(s4);
+
+        var s5 = this.getWhatDate('start');
+        console.log(s5);
+
+        this.trading.time[1].children.time[0].startTime = s3;
+        this.trading.time[1].children.time[0].endTime = s;
+        this.trading.time[1].children.time[1].startTime = s4.last;
+        this.trading.time[1].children.time[1].endTime = s;
+        this.trading.time[1].children.time[2].startTime = s5;
+        this.trading.time[1].children.time[2].endTime = s;
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.querySelector('.tradingPriceEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(this.trading.tradingPriceOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart1 = echarts.init(document.querySelector('.earningsPriceEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart1.setOption(this.core.earnings.earningsOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart2 = echarts.init(document.querySelector('.costPriceEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(this.core.cost.costOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart3 = echarts.init(document.querySelector('.KMData'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart3.setOption(this.KM.KMOption);
+
+        this.searchObject_trading = {
+            beginDate: this.trading.time[0].children.time[1].startTime,
+            endDate: this.trading.time[0].children.time[1].endTime
+        }
+        this.getDay();
+      },
+	  methods: {
+        getDay: function () {
+            var that = this, data = this.searchObject_trading;
+            $.post({
+                url: "${siteurl}tenantRest/order/num.htm", data, success: function (result) {
+                    console.log(result);
+                    if (result.code == 0) {
+                        var data = [],data1 = [];
+                        result.list.forEach((item) => {
+                            data.push(item.label);
+                            data1.push(item.num);
+                        })
+                        that.trading.tradingPriceOption.series[0].name = result.name;
+                        that.trading.tradingPriceOption.xAxis[0].data = data;
+                        that.trading.tradingPriceOption.series[0].data = data1;
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChart = echarts.init(document.querySelector('.tradingPriceEcharts'));
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(that.trading.tradingPriceOption);
+                        that.trading.tradingPriceList[0].price = result.total;
+                        console.log(data, data1, that.trading.tradingPriceOption);
+                    }
+                }
+            });
+        },
+        getMonth: function () {
+            var that = this, data = this.searchObject_trading;
+            $.post({
+                url: "${siteurl}tenantRest/order/month.htm", data, success: function (result) {
+                    console.log(result);
+                    if (result.code == 0) {
+                        var data = [],data1 = [];
+                        result.list.forEach((item) => {
+                            data.push(item.label);
+                            data1.push(item.num);
+                        })
+                        that.trading.tradingPriceOption.series[0].name = result.name;
+                        that.trading.tradingPriceOption.xAxis[0].data = data;
+                        that.trading.tradingPriceOption.series[0].data = data1;
+                        // 基于准备好的dom，初始化echarts实例
+                        var myChart = echarts.init(document.querySelector('.tradingPriceEcharts'));
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(that.trading.tradingPriceOption);
+                        that.trading.tradingPriceList[0].price = result.total;
+                        console.log(data, data1, that.trading.tradingPriceOption);
+                    }
+                }
+            });
+        },
+        getWhatDate: function (str) { //有参数传递为起始时间,无参数传递为结束时间
+            // 获取时间戳和数据周期 // 开始时间，格式yyyy - MM - dd HH: mm: ss
+            var nowdate = new Date();
+            var halfYearDate = new Date(Date.now() - (365 / 2 * 24 * 3600 * 1000));
+            if (str) {
+                timeDate = getdate(halfYearDate, str)
+            } else {
+                timeDate = getdate(nowdate)
+            }
+
+            function getdate(date, str) {
+                // Y = date.getFullYear() + '-';
+                // M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                // D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate()) + ' ';
+                // h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                // m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                // s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+                Y = date.getFullYear();
+                M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+                D = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+                // h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
+                // m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+                // s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+                if (str) {
+                    var M = parseInt(M);
+                    if (M < 9) {
+                        return Y + '-' + '0' + (M + 1) + '-' + '01';
+                    } else if (M == 9) {
+                        return Y + '-' + '10-01';
+                    } else if (M == 10) {
+                        return Y + '-' + '11-01';
+                    } else if (M == 11) {
+                        return Y + '-' + '12-01';
+                    } else if (M == 12) {
+                        return (Y + 1) + '-' + '01-01';
+                    }
+                } else {
+                    return Y + '-' + M + '-' + D + ' 23:59:59';
+                }
+            }
+            return timeDate
+        },
+        getLast3Month() {
+            var now = new Date();
+            var year = now.getFullYear();
+            var month = now.getMonth() + 1;//0-11表示1-12月
+            var day = now.getDate();
+            var dateObj = {};
+            if (parseInt(month) < 10) {
+                month = "0" + month;
+            }
+            if (parseInt(day) < 10) {
+                day = "0" + day;
+            }
+        
+            dateObj.now = year + '-' + month + '-' + day;
+        
+            if (parseInt(month) == 1) {//如果是1月份，则取上一年的10月份
+                dateObj.last = (parseInt(year) - 1) + '-10-' + day;
+                return dateObj;
+            }
+            if (parseInt(month) == 2) {//如果是2月份，则取上一年的11月份
+                dateObj.last = (parseInt(year) - 1) + '-11-' + day;
+                return dateObj;
+            }
+            if (parseInt(month) == 3) {//如果是3月份，则取上一年的12月份
+                dateObj.last = (parseInt(year) - 1) + '-12-' + day;
+                return dateObj;
+            }
+        
+            var preSize = new Date(year, parseInt(month) - 3, 0).getDate();//开始时间所在月的总天数
+            if (preSize < parseInt(day)) {
+        　　　// 开始时间所在月的总天数<本月总天数，比如当前是5月30日，在2月中没有30，则取下个月的第一天(3月1日)为开始时间
+                let resultMonth = parseInt(month) - 2 < 10 ? ('0' + parseInt(month) - 2) : (parseInt(month) - 2);  
+                dateObj.last = year + '-' + resultMonth + '-01';  
+                return dateObj;
+            }
+        
+            if (parseInt(month) <= 10) {
+                dateObj.last = year + '-0' + (parseInt(month) - 3) + '-' + day;
+                return dateObj;
+            } else {
+                dateObj.last = year + '-' + (parseInt(month) - 3) + '-' + day;
+                return dateObj;
+            }
+        
+        },
+        formatDate(date) {
+            var myyear = date.getFullYear();
+            var mymonth = date.getMonth()+1;
+            var myweekday = date.getDate();
+
+            if(mymonth < 10){
+            mymonth = "0" + mymonth;
+            }
+            if(myweekday < 10){
+            myweekday = "0" + myweekday;
+            }
+            return (myyear+"-"+mymonth + "-" + myweekday);
+        },
+        change(t){
+            if(t<10){
+            return "0"+t;
+            }else{
+            return t;
+            }
+        },
+        getMonthStartDate(){
+            var now = new Date(); //当前日期
+            var nowYear = this.change(now.getFullYear()); //当前年
+            var nowMonth = this.change(now.getMonth()); //当前月
+            var monthStartDate = new Date(nowYear, nowMonth, 1);
+            return this.formatDate(monthStartDate);
+        },
+        costToggle(index) {
+            this.core.cost.list.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        getTime(event) {
+            console.log(event);
+            this.searchObject_trading = {
+                beginDate: event[0],
+                endDate: event[1]
+            }
+            this.getDay();
+        },
+        getMonthTime(event) {
+            console.log(event);
+            this.searchObject_trading = {
+                beginDate: event[0],
+                endDate: event[1]
+            }
+            this.getMonth();
+        },
+        earningsToggle(index) {
+            this.core.earnings.list.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        coreTimeToggle(index) {
+            this.core.time.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        tradingToggle() {
+            this.trading.tradingState = !this.trading.tradingState;
+        },
+        timeToggle(index) {
+            var that = this, data = {};
+            this.trading.time.forEach((item, idx) => {
+                if(idx == index) {
+                    console.log(item.type);
+                    item.state = true;
+                    that.searchObject_trading = {
+                        beginDate: that.trading.time[1].children.time[1].startTime,
+                        endDate: that.trading.time[1].children.time[1].endTime,
+                    }
+                    that.getMonth()
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        childrenTimeToggle(idx, index) {
+            var that = this;
+            console.log(idx);
+            this.trading.time[idx].children.time.forEach((item, childrenIndex) => {
+                if(childrenIndex == index) {
+                    console.log(item);
+                    item.state = true;
+                    that.searchObject_trading = {
+                        beginDate: item.startTime,
+                        endDate: item.endTime
+                    }
+                    if(idx == 0) {
+                        that.getDay();
+                    } else if (idx == 1) {
+                        that.getMonth();
+                    }
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        tradingPriceToggle(index) {
+            this.trading.tradingPriceList.forEach((item, idx) => {
+                if(index == idx) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            }) 
+        }
+      }
+    })
+  </script>
+</body>
+</html>

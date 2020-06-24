@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>配送司机</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    [#include "/admin/common/commons.html"]
+
+	<link rel="stylesheet" href="${siteurl}plugins/vue-element/element.css">
+</head>
+<style>
+    .content {
+        padding: 0;
+    }
+
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    /* 导航 */
+    .navigation {
+        height: 60px;
+        line-height: 60px;
+        background-color: #f9f9f9;
+        font-size: 14px;
+        color: #666666;
+        padding-left: 16px;
+    }
+
+    .navigation i {
+        color: #d9dee5;
+    }
+
+    .navigation span {
+        font-weight: 700;
+    }
+
+    h5 {
+        height: 44px;
+        line-height: 44px;
+        font-size: 14px;
+        margin: 10px 0;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: #666;
+    }
+
+    /* 主页 */
+    .home {
+        padding: 0 10px;
+        background-color: #f9f9f9;
+        overflow: auto;
+    }
+    
+    /* 交易看板 */
+    .trading, .customers, .core, .goods {
+        padding: 10px 20px;
+        background-color: #fff;
+    }
+
+    /* 时间 */
+    .time {
+        padding: 10px 14px;
+        border: 1px dashed #e9e9e9;
+        overflow: hidden;
+    }
+
+    .time .time_l {
+        float: left;
+        line-height: 30px;
+    }
+
+    .time .time_l .timeItem {
+        font-size: 10px;
+        color: #666666;
+        padding-right: 14px;
+        margin-right: 14px;
+        border-right: 1px solid #898989;
+        display: inline-block;
+        cursor: pointer;
+        line-height: 10px;
+    }
+
+    .time .time_l .curren {
+        color: #5491de;
+    }
+
+    .time .time_r {
+        float: left;
+    }
+
+    .time .time_r .timeItem {
+        font-size: 10px;
+        display: inline-block;
+        padding: 0 20px;
+        line-height: 30px;
+        color: #666666;
+        border: 1px solid #d9d9d9;
+        margin-right: 10px;
+        cursor: pointer;
+    }
+
+    .time .time_r .curren {
+        color: #5491de;
+        border-color: #5491de;
+    }
+
+    .tradingPrice {
+        margin-bottom: 20px;
+    }
+
+    .tradingPrice ul {
+        overflow: hidden;
+    }
+
+    .tradingPrice li {
+        float: left;
+        width: 33.33%;
+        text-align: center;
+        height: 120px;
+        border: 1px solid #e9e9e9;
+        font-size: 14px;
+        border-left: 0;
+        cursor: pointer;
+        box-sizing: border-box;
+        color: #999999;
+    }
+
+    .tradingPrice li p:first-child {
+        margin-top: 35px;
+        margin-bottom: 0;
+    }
+
+    .tradingPrice li p:last-child {
+        color: #f74d4d;
+        font-size: 24px;
+    }
+
+    .tradingPrice li:first-child {
+        border-left: 1px solid #e9e9e9;
+    }
+
+    .tradingPrice .curren {
+        border-color: #5491de;
+        border-left: 1px solid #5491de;
+    }
+
+    .tradingPrice .curren:first-child {
+        border-color: #5491de;
+        border-left-color: #5491de;
+    }
+
+    /* 金额折线图的切换栏 */
+    .tradingPriceEchartsTitle {
+        font-size: 12px;
+        color: #ccc;
+        text-align: center;
+        margin-top: 20px;
+        position: relative;
+    }
+
+    .tradingPriceEchartsTitle .dataView {
+        position: absolute;
+        right: 20px;
+        bottom: -20px;
+        font-size: 12px;
+        color: #5491de;
+        cursor: pointer;
+    }
+
+    .tradingPriceEchartsTitle .dataView i {
+        font-size: 16px;
+    }
+
+    .tradingPriceEchartsTitle .dataView p {
+        color: #fff;
+    }
+
+    .tradingPriceEchartsTitle .dataView:hover p {
+        color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle ul {
+        display: inline-block;
+    }
+
+    .tradingPriceEchartsTitle li {
+        float: left;
+        position: relative;
+        margin-right: 45px;
+        cursor: pointer;
+    }
+
+    .tradingPriceEchartsTitle li::after {
+        position: absolute;
+        left: -40px;
+        top: 50%;
+        content: '';
+        display: inline-block;
+        width: 30px;
+        height: 1px;
+        background-color: #ccc;
+    }
+
+    .tradingPriceEchartsTitle li::before {
+        position: absolute;
+        left: -33px;
+        top: 10%;
+        content: '';
+        display: inline-block;
+        width: 15px;
+        z-index: 1;
+        height: 15px;
+        background-color: #fff;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 50%;
+    }
+
+    .tradingPriceEchartsTitle .curren {
+        color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle .curren::after {
+        background-color: #5491de;
+    }
+
+    .tradingPriceEchartsTitle .curren::before {
+        background-color: #5491de;
+        border: 1px solid #5491de;
+    }
+
+    .tradingPriceEchartsTitle .pricedataView {
+        padding: 0 50px;
+    }
+
+    /* 核心看板 */
+    .coreData {
+        overflow: hidden;
+        width: 100%;
+        padding: 20px 0;
+    }
+
+    .earnings, .cost {
+        padding: 0 40px;
+    }
+
+    .earningsPrice {
+
+    }
+
+    .earningsPrice ul {
+        overflow: hidden;
+    }
+
+    .earningsPrice li {
+        float: left;
+        width: 50%;
+        text-align: center;
+        height: 120px;
+        border: 1px solid #e9e9e9;
+        font-size: 14px;
+        border-left: 0;
+        cursor: pointer;
+        box-sizing: border-box;
+        color: #999999;
+        padding: 20px 0;
+    }
+
+    .earningsPrice li b {
+        font-weight: 400;
+        margin-left: 10px;
+    }
+
+    .earningsPrice li p {
+        margin-bottom: 0;
+    }
+
+    .earningsPrice li div {
+        color: #f74d4d;
+        font-size: 24px;
+    }
+
+    .earningsPrice li:first-child {
+        border-left: 1px solid #e9e9e9;
+    }
+
+    .earningsPrice .curren {
+        border-color: #5491de;
+        border-left: 1px solid #5491de;
+    }
+
+    .earningsPrice .curren:first-child {
+        border-color: #5491de;
+        border-left-color: #5491de;
+    }
+
+    /* 商品板块 */
+    .goods .earnings ul {
+        padding: 5px 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .goods .earnings li {
+        overflow: hidden;
+        font-size: 14px;
+        color: #6e6e6e;
+        position: relative;
+        margin-top: 10px;
+        padding: 0 26px;
+        padding-right: 60px;
+    }
+
+    .goods .earnings li i {
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+        border-radius: 50%;
+        font-style: normal;
+        background-color: #f4f4f4;
+        color: #6e6e6e;
+        text-align: center;
+        float: left;
+    }
+
+    .goods .earnings .li1 i {
+        background-color: #5491de;
+        color: #fff;
+    }
+
+    .goods .earnings .li2 i {
+        background-color: #88b2e8;
+        color: #fff;
+    }
+
+    .goods .earnings .li3 i {
+        background-color: #bbd3f2;
+        color: #fff;
+    }
+
+    .goods .earnings p {
+        position: absolute;
+        left: 0;
+        top: 0;
+        line-height: 25px;
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 88px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow:ellipsis;
+    }
+
+    .goods .earnings span {
+        float: right;
+    }
+
+    .goods .goodsHeader {
+        height: 60px;
+        line-height: 60px;
+        background-color: #f7f7f7;
+        padding: 0 24px;
+        font-size: 16px;
+        color: #666;
+        font-weight: 700;
+        overflow: hidden;
+    }
+
+    .goods .goodsHeader span {
+        margin-right: 30px;
+        float: left;
+    }
+
+    .goods .goodsHeader span:last-child {
+        float: right;
+        margin-right: 0px;
+    }
+
+    /* 客户分布版块 */
+    .customersCenter {
+        height: 500px;
+    }
+
+    h4 {
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    h1 {
+        height: 20px;
+        margin: 0;
+    }
+
+    .el-table__row>td{
+        border: none;
+    }
+    .el-table::before {
+        height: 0px;
+    }
+
+    .el-table td, .el-table th.is-leaf {
+        border: 0;
+    }
+
+    [v-cloak]{
+        display: none;
+    }
+</style>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Header Navbar: style can be found in header.less -->
+        [#include "/admin/common/nav.html"]
+    </header>
+
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            [@user_panel /]
+            <!-- search form -->
+            [@sidebar_form /]
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">主面板</li>
+                [@menustag id=1]
+                [#list list as item]
+                [@menu item "1,104,108"]
+                [/@menu]
+                [/#list]
+                [/@menustag]
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <!-- Main content -->
+        <section class="content">
+            <!-- Default box -->
+            
+            <!-- 导航 -->
+            <div class="navigation">
+                数据 <i> / </i> <span>商品分析</span>
+            </div>
+
+            <!-- 主体 -->
+             <div class="home" id="app" v-cloak>
+
+                 <!-- 交易看板 -->
+                 <div class="trading">
+                    <h5>商品构成 <i class="el-icon-info"></i></h5>
+
+                    <!-- 交易金额 -->
+                    <div class="tradingPrice">
+                        <ul>
+                            <li v-for="(item, index) in trading.tradingPriceList" :key="index" :class="[item.state ? 'curren' : '']" @click="tradingPriceToggle(index)">
+                                <p>{{item.title}} <i class="el-icon-info"></i></p>
+                                <p>{{item.price}}</p>
+                            </li>
+                        </ul>
+                    </div>
+
+                     <!-- 交易时间 -->
+                     <div class="time">
+                         <div class="time_l">
+                            <span v-for="(item, index) in trading.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="timeToggle(index)">{{item.text}}</span>
+                         </div>
+                         <div class="time_r" v-for="(item, idx) in trading.time" :key="idx" v-if="item.state">
+                            <span v-for="(item, index) in item.children.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="childrenTimeToggle(idx, index)">{{ item.text }}</span>
+                            <el-date-picker
+                            v-if="trading.time[0].state"
+                            style="vertical-align: middle;"
+                            v-model="trading.dayValue"
+                            size="small"
+                            type="daterange"
+                            range-separator="~"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                            </el-date-picker>
+                            <el-date-picker
+                            v-if="trading.time[1].state"
+                            style="vertical-align: middle;"
+                            v-model="trading.monthValue"
+                            size="small"
+                            type="monthrange"
+                            range-separator="~"
+                            start-placeholder="开始月份"
+                            end-placeholder="结束月份">
+                            </el-date-picker>
+                        </div>
+                     </div>
+
+                     <!-- 金额折线图 -->
+                     <div class="tradingPriceEcharts" style="width: 100%;height: 500px;margin-top: 30px;" v-show="!trading.tradingState"></div>
+
+                     <div class="pricedataView" v-show="trading.tradingState">
+                         <h4>数据视图</h4>
+                         <el-table
+                            :data="trading.tableData"
+                            height="300"
+                            size="small"
+                            style="width: 100%">
+                            <el-table-column
+                            prop="date"
+                            header-align="center"
+                            align="center"
+                            label="日期">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="name"
+                            label="订单总数"
+                            width="180">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="交易额（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="退款金额（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="客单价（元）">
+                            </el-table-column>
+                            <el-table-column
+                            header-align="center"
+                            align="center"
+                            prop="address"
+                            width="180"
+                            label="成交转换率">
+                            </el-table-column>
+                        </el-table>
+                        <div style="margin: 20px 0;text-align: right;">
+                            <el-button size="mini" type="danger" @click="tradingToggle">关闭</el-button>
+                        </div>
+                     </div>
+                 </div>
+
+                 <h1></h1>
+
+                 <div class="customers">
+                    <h5>商品构成 <i class="el-icon-info"></i></h5>
+
+                    <div class="customersCenter" style="height: 300px;margin-bottom: 40px;">
+                    </div>
+                    
+                 </div>
+
+                 <h1></h1>
+
+                 <!-- 商品看板 -->
+                 <div class="goods">
+                    <h5>商品成本</h5>
+
+                    <!-- 交易时间 -->
+                    <div class="time">
+                        <div class="time_l">
+                           <span v-for="(item, index) in trading.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="timeToggle(index)">{{item.text}}</span>
+                        </div>
+                        <div class="time_r" v-for="(item, idx) in trading.time" :key="idx" v-if="item.state">
+                           <span v-for="(item, index) in item.children.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="childrenTimeToggle(idx, index)">{{ item.text }}</span>
+                           <el-date-picker
+                           v-if="trading.time[0].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.dayValue"
+                           size="small"
+                           type="daterange"
+                           range-separator="~"
+                           start-placeholder="开始日期"
+                           end-placeholder="结束日期">
+                           </el-date-picker>
+                           <el-date-picker
+                           v-if="trading.time[1].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.monthValue"
+                           size="small"
+                           type="monthrange"
+                           range-separator="~"
+                           start-placeholder="开始月份"
+                           end-placeholder="结束月份">
+                           </el-date-picker>
+                       </div>
+                    </div>
+
+                    <div class="coreData">
+                        <el-col :span="12">
+                            <div class="earnings goodsRanking">
+                                <h5 style="text-align: center;">商品动销趋势 <i class="el-icon-info"></i></h5>
+
+                                <!-- 商品排名 -->
+                                <div class="goodSunitPriceEcharts" style="width: 100%;height: 300px;"></div>
+
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="earnings salesRanking">
+                                <h5 style="text-align: center;">库存周转趋势 <i class="el-icon-info"></i></h5>
+
+                                <!-- 库存排名 -->
+                                <div class="goodsSalesEcharts" style="width: 100%;height: 300px;"></div>
+                                
+                            </div>
+                        </el-col>
+                    </div>
+                 </div>
+
+                 <h1></h1>
+
+                 <!-- 商品看板 -->
+                 <div class="goods">
+                    <h5>商品看板</h5>
+
+                    <!-- 商品时间 -->
+                    <div class="time">
+                        <div class="time_l">
+                           <span v-for="(item, index) in trading.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="timeToggle(index)">{{item.text}}</span>
+                        </div>
+                        <div class="time_r" v-for="(item, idx) in trading.time" :key="idx" v-if="item.state">
+                           <span v-for="(item, index) in item.children.time" :key="index" :class="[item.state ? 'curren' : '']" class="timeItem" @click="childrenTimeToggle(idx, index)">{{ item.text }}</span>
+                           <el-date-picker
+                           v-if="trading.time[0].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.dayValue"
+                           size="small"
+                           type="daterange"
+                           range-separator="~"
+                           start-placeholder="开始日期"
+                           end-placeholder="结束日期">
+                           </el-date-picker>
+                           <el-date-picker
+                           v-if="trading.time[1].state"
+                           style="vertical-align: middle;"
+                           v-model="trading.monthValue"
+                           size="small"
+                           type="monthrange"
+                           range-separator="~"
+                           start-placeholder="开始月份"
+                           end-placeholder="结束月份">
+                           </el-date-picker>
+                       </div>
+                    </div>
+
+                    <div class="coreData">
+                        <el-col :span="12">
+                            <div class="earnings goodsRanking">
+                                <h5>卖的最好TOP10排名</h5>
+
+                                <div class="goodsHeader">
+                                    <span>排名</span>
+                                    <span>商品</span>
+                                    <span>销量（件）</span>
+                                </div>
+
+                                <!-- 商品排名 -->
+                                <ul>
+                                    <li v-for="(item, index) in goods.goodsRankingList" :key="index" :class="[index == 0 ? 'li1' : (index == 1 ? 'li2' : (index == 2 ? 'li3' : ''))]"><i>{{ index+1 }}</i><p>{{ item.text }}</p><span>{{ item.price }}</span></li>
+                                </ul>
+                            </div>
+                        </el-col>
+                        <el-col :span="12">
+                            <div class="earnings salesRanking">
+                                <h5>毛利最高TOP10排名</h5>
+
+                                <div class="goodsHeader">
+                                    <span>排名</span>
+                                    <span>商品</span>
+                                    <span>销量（件）</span>
+                                </div>
+
+                                <!-- 库存排名 -->
+                                <ul>
+                                    <li v-for="(item, index) in goods.salesRankingList" :key="index" :class="[index == 0 ? 'li1' : (index == 1 ? 'li2' : (index == 2 ? 'li3' : ''))]"><i>{{ index+1 }}</i><p>{{ item.text }}</p><span>{{ item.price }}</span></li>
+                                </ul>
+                            </div>
+                        </el-col>
+                    </div>
+                 </div>
+             </div>
+
+            <!-- /.box -->
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    [#include "/admin/common/footer.html"]
+
+    <!-- Control Sidebar -->
+    [#include "/admin/common/aside.html"]
+
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="${siteurl}dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="${siteurl}dist/js/list.js"></script>
+
+<!-- import Vue before Element -->
+<script src="${siteurl}plugins/vue-element/vue.js"></script>
+<!-- import JavaScript -->
+<script src="${siteurl}plugins/vue-element/element.js"></script>
+
+<script src="${siteurl}dist/js/echarts.js"></script>
+
+<script>
+    var vm = new Vue({
+      el: '#app',
+      data: function() {
+        return {
+            trading: {
+                time: [
+                    {
+                        text: '按日',
+                        state: true,
+                        children: {
+                            time: [
+                                {
+                                    text: '昨日',
+                                    state: false
+                                },
+                                {
+                                    text: '近7日',
+                                    state: true
+                                },
+                                {
+                                    text: '近30日',
+                                    state: false
+                                },
+                            ],
+                            startTimeText: '开始时间',
+                            endTimeText: '结束时间',
+                            timeType: 'date',
+                            timeValue: 'timeValue'
+                        }
+                    },
+                    {
+                        text: '按月',
+                        state: false,
+                        children: {
+                            time: [
+                                {
+                                    text: '当月',
+                                    state: false
+                                },
+                                {
+                                    text: '近3月',
+                                    state: true
+                                },
+                                {
+                                    text: '近半年',
+                                    state: false
+                                },
+                            ],
+                            startTimeText: '开始月份',
+                            endTimeText: '结束月份',
+                            timeType: 'year',
+                            timeValue: 'timeValue'
+                        }
+                    }
+                ],
+                dayValue: '',
+                monthValue: '',
+                tradingPriceList: [
+                    {
+                        title: '商品SPU总数',
+                        price: '38',
+                        simplifyTitle: '商品SPU总数',
+                        state: true
+                    },
+                    {
+                        title: '商品SKU总数',
+                        price: '0',
+                        simplifyTitle: '商品SKU总数',
+                        state: false
+                    },
+                    {
+                        title: '在售SKU数',
+                        price: '0',
+                        simplifyTitle: '在售SKU数',
+                        state: false
+                    }
+                ],
+                tradingPriceOption: {
+                    legend: {
+                        data: ['SKU总数', '在售SKU数', '售罄SKU数'],
+                        top: 0
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#f9f9f9',
+                                color: '#666'
+                            }
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['2019-10', '2019-12', '2019-11', '2019-12', '2020-01', '2020-02', '2020-03']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            nameTextStyle: {
+                                color: '#666666'
+                            },
+                            axisLabel: {
+                                color: '#666666'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            name: '总数'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: 'SKU总数',
+                            type: 'bar',
+                            itemStyle: {
+                                color: '#5491de'
+                            },
+                            data: [10, 932, 901, 934, 20, 30, 40]
+                        },
+                        {
+                            name: '在售SKU数',
+                            type: 'bar',
+                            itemStyle: {
+                                color: '#3fc9d5'
+                            },
+                            data: [10, 20, 30, 40, 50, 60, 70]
+                        },
+                        {
+                            name: '售罄SKU数',
+                            type: 'bar',
+                            itemStyle: {
+                                color: '#f36a5a'
+                            },
+                            data: [10, 5, 15, 20, 25, 30, 35]
+                        }
+                    ]
+                },
+                tableData: [{
+                    date: '2016-05-03',
+                    name: '74',
+                    address: '33'
+                    }, {
+                    date: '2016-05-02',
+                    name: '88',
+                    address: '99'
+                    }, {
+                    date: '2016-05-04',
+                    name: '78',
+                    address: '878'
+                    }, {
+                    date: '2016-05-01',
+                    name: '87',
+                    address: '87'
+                    }, {
+                    date: '2016-05-08',
+                    name: '87',
+                    address: '578'
+                    }, {
+                    date: '2016-05-06',
+                    name: '5',
+                    address: '5'
+                    }, {
+                    date: '2016-05-07',
+                    name: '0',
+                    address: '1'
+                    }
+                ],
+                tradingState: false
+            },
+            core: {
+                time: [
+                    {
+                        text: '昨日',
+                        state: false
+                    },
+                    {
+                        text: '近7日',
+                        state: true
+                    },
+                    {
+                        text: '近30日',
+                        state: false
+                    }
+                ],
+                dayValue: '',
+                earnings: {
+                    earningsOption: {
+                        tooltip: {
+                            trigger: 'item',
+                        },
+                        legend: {
+                            bottom: 0
+                        },
+                        series: [
+                            {
+                                type: 'pie',
+                                radius: '65%',
+                                center: ['50%', '50%'],
+                                selectedMode: 'single',
+                                top: 0,
+                                label: {
+                                    show: false
+                                },
+                                data: [
+                                    {
+                                        value: 0, 
+                                        name: 'PC',
+                                        itemStyle: {
+                                            color: '#f36a5a'
+                                        }
+                                    },
+                                    {
+                                        value: 0, 
+                                        name: 'APP',
+                                        itemStyle: {
+                                            color: '#3fc9d5'
+                                        }
+                                    },
+                                    {
+                                        value: 0, 
+                                        name: '微信端',
+                                        itemStyle: {
+                                            color: '#f1c40f'
+                                        }
+                                    },
+                                    {
+                                        value: 0, 
+                                        name: 'PC端代客下单',
+                                        itemStyle: {
+                                            color: '#5491de'
+                                        }
+                                    },
+                                    {
+                                        value: 0, 
+                                        name: 'APP端代客下单',
+                                        itemStyle: {
+                                            color: '#45be89'
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                },
+                cost: {
+                    costOption: {
+                        tooltip: {
+                            trigger: 'item',
+                        },
+                        legend: {
+                            bottom: 0
+                        },
+                        series: [
+                            {
+                                type: 'pie',
+                                radius: '65%',
+                                center: ['50%', '50%'],
+                                selectedMode: 'single',
+                                top: 0,
+                                label: {
+                                    show: false
+                                },
+                                data: [
+                                    {
+                                        value: 535, 
+                                        name: '自主下单',
+                                        itemStyle: {
+                                            color: '#5491de'
+                                        }
+                                    },
+                                    {
+                                        value: 535, 
+                                        name: '代客下单',
+                                        itemStyle: {
+                                            color: '#3fc9d5'
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            goods: {
+                goodsRankingOption: {
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'line',
+                            label: {
+                                backgroundColor: '#f9f9f9',
+                                color: '#666'
+                            }
+                        }
+                    },
+                    legend: {
+                        data: ['动销率'],
+                        top: 0
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['2019-10-23', '2019-12-25', '2019-11-10', '2019-12-14']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            nameTextStyle: {
+                                color: '#666666'
+                            },
+                            axisLabel: {
+                                color: '#666666'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            name: '动销率'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '动销率',
+                            type: 'line',
+                            smooth: 0.5,
+                            label: {
+                                show: false
+                            },
+                            itemStyle: {
+                                color: '#f36a5a'
+                            },
+                            lineStyle: {
+                                color: '#f36a5a'
+                            },
+                            areaStyle: {
+                                color: '#f36a5a',
+                                opacity: 1
+                            },
+                            emphasis: {
+                                label: {
+                                    color: '#fff',
+                                },
+                                itemStyle: {
+                                    color: '#f36a5a',
+                                    borderColor: "#fff",
+                                    borderWidth: 2
+                                }
+                            },
+                            data: [0, 0, 0, 0]
+                        },
+                    ]
+                },
+                salesRankingOption: {
+                    legend: {
+                        data: ['库存周转率'],
+                        top: 0
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            label: {
+                                backgroundColor: '#f9f9f9',
+                                color: '#666'
+                            }
+                        }
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            boundaryGap: false,
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            data: ['2019-10-10', '2019-12-14', '2019-11-16', '2019-12-18']
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            nameTextStyle: {
+                                color: '#666666'
+                            },
+                            axisLabel: {
+                                color: '#666666'
+                            },
+                            axisLine: {
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            axisLabel: {
+                                textStyle: {
+                                    color: '#686868'
+                                }
+                            },
+                            splitLine: {
+                                show: true,
+                                lineStyle: {
+                                    color: '#f5f5f5'
+                                }
+                            },
+                            name: '库存周转率'
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '库存周转率',
+                            type: 'line',
+                            smooth: 0.5,
+                            label: {
+                                show: false
+                            },
+                            itemStyle: {
+                                color: '#f36a5a'
+                            },
+                            lineStyle: {
+                                color: '#f36a5a'
+                            },
+                            areaStyle: {
+                                color: '#f36a5a',
+                                opacity: 1
+                            },
+                            emphasis: {
+                                label: {
+                                    color: '#fff',
+                                },
+                                itemStyle: {
+                                    color: '#f36a5a',
+                                    borderColor: "#fff",
+                                    borderWidth: 2
+                                }
+                            },
+                            data: [0, 0, 0, 0]
+                        },
+                    ]
+                },
+                goodsRankingList: [
+                    {
+                        price: '100',
+                        text: '测试商品'
+                    },
+                    {
+                        price: '90',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80',
+                        text: '测试商品'
+                    },
+                    {
+                        price: '70',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '60',
+                        text: '藿香正气水'
+                    },
+                    {
+                        price: '100',
+                        text: '善味阁 中秋礼盒 鸭舌鸭脖鸭肫鸭掌 1082g'
+                    },
+                    {
+                        price: '90',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80',
+                        text: '测试商品-水果时光 黄桃罐头 箱装 410g 410g'
+                    },
+                    {
+                        price: '70',
+                        text: '客厅沙发组合套装 小户型现代简约三人位整客厅沙发组合套装 小户型现代简约三人位整装家具北欧布艺沙发073 组合 073A(3+右妃)装家具北欧布艺沙发073 组合 073A(3+右妃)'
+                    },
+                    {
+                        price: '60',
+                        text: '藿香正气水'
+                    }
+                ],
+                salesRankingList: [
+                    {
+                        price: '100',
+                        text: '测试商品-善味阁 中秋礼盒 鸭舌鸭脖鸭肫鸭掌 1082g'
+                    },
+                    {
+                        price: '90',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80',
+                        text: '测试商品-水果时光 黄桃罐头 箱装 410g 410g'
+                    },
+                    {
+                        price: '70',
+                        text: '客厅沙发组合套装 小户型现代简约三人位整客厅沙发组合套装 小户型现代简约三人位整装家具北欧布艺沙发073 组合 073A(3+右妃)装家具北欧布艺沙发073 组合 073A(3+右妃)'
+                    },
+                    {
+                        price: '60',
+                        text: '藿香正气水'
+                    },
+                    {
+                        price: '100',
+                        text: '测试商品-善味阁 中秋礼盒 鸭舌鸭脖鸭肫鸭掌 1082g'
+                    },
+                    {
+                        price: '90',
+                        text: '土鸡蛋'
+                    },
+                    {
+                        price: '80',
+                        text: '测试商品-水果时光 黄桃罐头 箱装 410g 410g'
+                    },
+                    {
+                        price: '70',
+                        text: '客厅沙发组合套装 小户型现代简约三人位整客厅沙发组合套装 小户型现代简约三人位整装家具北欧布艺沙发073 组合 073A(3+右妃)装家具北欧布艺沙发073 组合 073A(3+右妃)'
+                    },
+                    {
+                        price: '60',
+                        text: '藿香正气水'
+                    }
+                ]
+            },
+            customers: {
+                customersOption: {
+                    tooltip: {
+                        trigger: 'item',
+                    },
+                    legend: {
+                        bottom: 0
+                    },
+                    series: [
+                        {
+                            type: 'pie',
+                            radius: '65%',
+                            center: ['50%', '50%'],
+                            selectedMode: 'single',
+                            top: 0,
+                            label: {
+                                show: false
+                            },
+                            data: [
+                                {
+                                    value: 53, 
+                                    name: '龙泉春',
+                                    itemStyle: {
+                                        color: '#5491de'
+                                    }
+                                },
+                                {
+                                    value: 55, 
+                                    name: '快消品',
+                                    itemStyle: {
+                                        color: '#c5de55'
+                                    }
+                                },
+                                {
+                                    value: 99, 
+                                    name: '蛋品',
+                                    itemStyle: {
+                                        color: '#fde05c'
+                                    }
+                                },
+                                {
+                                    value: 25, 
+                                    name: '手机',
+                                    itemStyle: {
+                                        color: '#fb7949'
+                                    }
+                                },
+                                {
+                                    value: 78, 
+                                    name: '新品',
+                                    itemStyle: {
+                                        color: '#e9307e'
+                                    }
+                                },
+                                {
+                                    value: 55, 
+                                    name: '未分类',
+                                    itemStyle: {
+                                        color: '#c82dc3'
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+      },
+      created: function () {
+        var contentWrapperHeight = $(".content-wrapper").height();
+        var navigationHeight = $(".navigation").height();
+        var mainHeaderHeight = $(".main-header").height();
+        var mainFooterHeight = $(".main-footer").height();
+        var mainFooterPaddingTop = $(".main-footer").css("padding-top");
+        var mainFooterPaddingBottom = $(".main-footer").css("padding-bottom");
+        var height = contentWrapperHeight - navigationHeight - mainHeaderHeight - mainFooterHeight - parseInt(mainFooterPaddingTop) - parseInt(mainFooterPaddingBottom) - 1;
+        console.log(contentWrapperHeight, navigationHeight, mainHeaderHeight, mainFooterHeight, mainFooterPaddingTop, mainFooterPaddingBottom);
+        $(".home").height(height);
+      },
+      mounted: function () {
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.querySelector('.tradingPriceEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(this.trading.tradingPriceOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart4 = echarts.init(document.querySelector('.goodSunitPriceEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart4.setOption(this.goods.goodsRankingOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart5 = echarts.init(document.querySelector('.goodsSalesEcharts'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart5.setOption(this.goods.salesRankingOption);
+
+        // 基于准备好的dom，初始化echarts实例
+        var myChart6 = echarts.init(document.querySelector('.customersCenter'));
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart6.setOption(this.customers.customersOption);
+      },
+	  methods: {
+        costToggle(index) {
+            this.core.cost.list.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        earningsToggle(index) {
+            this.core.earnings.list.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        coreTimeToggle(index) {
+            this.core.time.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        tradingToggle() {
+            this.trading.tradingState = !this.trading.tradingState;
+        },
+        timeToggle(index) {
+            this.trading.time.forEach((item, idx) => {
+                if(idx == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        childrenTimeToggle(idx, index) {
+            this.trading.time[idx].children.time.forEach((item, childrenIndex) => {
+                if(childrenIndex == index) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            });
+        },
+        tradingPriceToggle(index) {
+            this.trading.tradingPriceList.forEach((item, idx) => {
+                if(index == idx) {
+                    item.state = true;
+                } else {
+                    item.state = false;
+                }
+            }) 
+        }
+      }
+    })
+  </script>
+
+</body>
+</html>

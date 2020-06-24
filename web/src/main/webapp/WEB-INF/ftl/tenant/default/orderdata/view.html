@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>用户管理</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	[#include "/admin/common/commons.html"]
+	<style>
+		/* 导航 */
+		.navigation {
+			height: 60px;
+			line-height: 60px;
+			background-color: #f9f9f9;
+			padding-left: 10px;
+		}
+
+		.navigation i {
+			color: #d9dee5;
+			display: inline-block;
+			font-size: 14px;
+			color: #666666;
+			font-style: normal;
+		}
+
+		.navigation i::after {
+			content: '/';
+			display: inline-block;
+			margin: 0 5px;
+		}
+
+		.navigation span {
+			font-weight: 700;
+			font-size: 14px;
+			color: #666666;
+		}
+
+	</style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+	<header class="main-header">
+		<!-- Header Navbar: style can be found in header.less -->
+		[#include "/admin/common/nav.html"]
+	</header>
+
+	<!-- =============================================== -->
+
+	<!-- Left side column. contains the sidebar -->
+	<aside class="main-sidebar">
+		<!-- sidebar: style can be found in sidebar.less -->
+		<section class="sidebar">
+			<!-- Sidebar user panel -->
+			[@user_panel /]
+			<!-- search form -->
+			[@sidebar_form /]
+			<!-- /.search form -->
+			<!-- sidebar menu: : style can be found in sidebar.less -->
+			<ul class="sidebar-menu" data-widget="tree">
+				<li class="header">主面板</li>
+				[@menustag id=1]
+				[#list list as item]
+				[@menu item "1,61,62"]
+				[/@menu]
+				[/#list]
+				[/@menustag]
+			</ul>
+		</section>
+		<!-- /.sidebar -->
+	</aside>
+
+	<!-- =============================================== -->
+
+	<!-- Content Wrapper. Contains page content -->
+	<div class="content-wrapper">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				用户管理
+				<small>管理你的用户</small>
+			</h1>
+		</section>
+		<!-- Main content -->
+		<section class="content">
+
+			<!-- Default box -->
+			<div class="col-xs-12">
+				<div class="box box-default box-solid">
+					<div class="box-header with-border">
+						<h3 class="box-title">商品信息</h3>
+					</div>
+					<!-- /.box-header -->
+					<!-- form start -->
+						<div class="box-body">
+								<div class="form-group">
+									<label for="orderCode" class="col-sm-2 control-label">订单编号</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.orderCode!''}" class="form-control" id="orderCode" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="mergeOrderCode" class="col-sm-2 control-label">合并支付订单号</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.mergeOrderCode!''}" class="form-control" id="mergeOrderCode" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="outTradeNum" class="col-sm-2 control-label">外部交易流水号</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.outTradeNum!''}" class="form-control" id="outTradeNum" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="orderSource" class="col-sm-2 control-label">订单来源</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.orderSource!''}" class="form-control" id="orderSource" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="paySource" class="col-sm-2 control-label">支付来源</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.paySource!''}" class="form-control" id="paySource" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="newRefundId" class="col-sm-2 control-label">最新售后ID</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.newRefundId!''}" class="form-control" id="newRefundId" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="state" class="col-sm-2 control-label">订单状态</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.state!''}" class="form-control" id="state" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="commentState" class="col-sm-2 control-label">评价状态</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.commentState!''}" class="form-control" id="commentState" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="userState" class="col-sm-2 control-label">用户删除</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.userState!''}" class="form-control" id="userState" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="payMode" class="col-sm-2 control-label">支付方式</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.payMode!''}" class="form-control" id="payMode" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="orderTime" class="col-sm-2 control-label">下单时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.orderTime!''}" class="form-control" id="orderTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="payTime" class="col-sm-2 control-label">支付时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.payTime!''}" class="form-control" id="payTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="deliveryTime" class="col-sm-2 control-label">发货时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.deliveryTime!''}" class="form-control" id="deliveryTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="receiveTime" class="col-sm-2 control-label">收货时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.receiveTime!''}" class="form-control" id="receiveTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="orderType" class="col-sm-2 control-label">订单类型</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.orderType!''}" class="form-control" id="orderType" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="weight" class="col-sm-2 control-label">重量</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.weight!''}" class="form-control" id="weight" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="totalAmount" class="col-sm-2 control-label">原价</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.totalAmount!''}" class="form-control" id="totalAmount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="productAmount" class="col-sm-2 control-label">订单优惠后总金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.productAmount!''}" class="form-control" id="productAmount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="amount" class="col-sm-2 control-label">订单优惠后总金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.amount!''}" class="form-control" id="amount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="payAmount" class="col-sm-2 control-label">实际支付金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.payAmount!''}" class="form-control" id="payAmount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="freight" class="col-sm-2 control-label">运费</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.freight!''}" class="form-control" id="freight" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="discount" class="col-sm-2 control-label">卖家优惠总金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.discount!''}" class="form-control" id="discount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="platformDiscount" class="col-sm-2 control-label">平台优惠优惠券金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.platformDiscount!''}" class="form-control" id="platformDiscount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="integralDiscount" class="col-sm-2 control-label">积分抵扣</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.integralDiscount!''}" class="form-control" id="integralDiscount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="useIntegral" class="col-sm-2 control-label">使用积分数</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.useIntegral!''}" class="form-control" id="useIntegral" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="useRedPacket" class="col-sm-2 control-label">使用红包</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.useRedPacket!''}" class="form-control" id="useRedPacket" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="redPacketDiscount" class="col-sm-2 control-label">单件商品红包抵扣</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.redPacketDiscount!''}" class="form-control" id="redPacketDiscount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="returnAmount" class="col-sm-2 control-label">退款金额</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.returnAmount!''}" class="form-control" id="returnAmount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="sendIntegral" class="col-sm-2 control-label">积分赠送</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.sendIntegral!''}" class="form-control" id="sendIntegral" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="sysReceiveTime" class="col-sm-2 control-label">系统自动收货时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.sysReceiveTime!''}" class="form-control" id="sysReceiveTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="hasExtendReceive" class="col-sm-2 control-label">是否已延长收货</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.hasExtendReceive!''}" class="form-control" id="hasExtendReceive" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="editPriceTime" class="col-sm-2 control-label">商家改价格时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.editPriceTime!''}" class="form-control" id="editPriceTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="finishTime" class="col-sm-2 control-label">完成时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.finishTime!''}" class="form-control" id="finishTime" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="productCount" class="col-sm-2 control-label">购买数量</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.productCount!''}" class="form-control" id="productCount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="returnCount" class="col-sm-2 control-label">退货数量</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.returnCount!''}" class="form-control" id="returnCount" type="text">
+									</div>
+								</div>
+								<div class="form-group">
+									<label for="remindTime" class="col-sm-2 control-label">最后提现时间</label>
+									<div class="col-sm-10">
+										<input readonly="readonly" value="${model.remindTime!''}" class="form-control" id="remindTime" type="text">
+									</div>
+								</div>
+						</div>
+						<!-- /.box-body -->
+				</div>
+			</div>
+
+			<!-- /.box -->
+
+		</section>
+		<!-- /.content -->
+	</div>
+	<!-- /.content-wrapper -->
+
+	[#include "/admin/common/footer.html"]
+
+	<!-- Control Sidebar -->
+	[#include "/admin/common/aside.html"]
+
+	<!-- /.control-sidebar -->
+	<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+	<div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 2.2.3 -->
+<script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+<!-- Bootstrap 3.3.6 -->
+<script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+<!-- SlimScroll -->
+<script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<!-- FastClick -->
+<script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+<!-- AdminLTE App -->
+<script src="${siteurl}dist/js/adminlte.min.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="${siteurl}dist/js/demo.js"></script>
+</body>
+</html>

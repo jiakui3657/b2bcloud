@@ -1,0 +1,9 @@
+[#macro tabnav index id]
+<ul class="nav nav-tabs">
+    <li [#if index=1] class="active" [/#if] ><a href="${siteurl}admin/tenant/view_view.htm?id=${id!}" >基本资料</a></li>
+    <li [#if index=2] class="active" [/#if] ><a href="${siteurl}admin/tenant/view_accounts.htm?id=${id!}" >后台账号</a></li>
+    <li [#if index=3] class="active" [/#if] ><a href="#settings" >统计信息</a></li>
+    <li [#if index=4] class="active" [/#if] ><a href="${siteurl}admin/tenant/view_menus.htm?tenant=${id!}" >功能列表</a></li>
+
+</ul>
+[/#macro]

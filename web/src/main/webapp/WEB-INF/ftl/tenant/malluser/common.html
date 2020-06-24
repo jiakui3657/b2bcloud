@@ -1,0 +1,10 @@
+[#macro tabnav index id]
+<ul class="nav nav-tabs">
+    <li [#if index=1] class="active" [/#if] ><a href="${siteurl}admin/malluser/view_view.htm?id=${id!}" >会员资料</a></li>
+    <li [#if index=2] class="active" [/#if] ><a href="#timeline" >推广记录</a></li>
+    <li [#if index=3] class="active" [/#if] ><a href="#settings" >待到账明细</a></li>
+    <li [#if index=4] class="active" [/#if] ><a href="${siteurl}admin/malluser/view_list_money.htm?id=${id!}" >资金明细</a></li>
+    <li [#if index=5] class="active" [/#if] ><a href="${siteurl}admin/member/vip_code.htm?id=${id!}" >推广码</a></li>
+    <li [#if index=6] class="active" [/#if] ><a href="${siteurl}admin/malluser/password.htm?id=${id!}" >重置密码</a></li>
+</ul>
+[/#macro]

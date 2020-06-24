@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商品</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	[#include "/admin/common/commons.html"]
+
+	<!--tree -->
+	<link href="${siteurl}plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+	<link rel="stylesheet" href="${siteurl}plugins/vue-element/element.css">
+</head>
+<style>
+	.content-header {
+		padding: 0;
+	}
+
+	.content {
+		padding: 0 10px 10px;
+		background-color: #f9f9f9;
+	}
+
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	[v-cloak] {
+		display: none;
+	}
+
+	/* 导航 */
+	.navigation {
+		height: 60px;
+		line-height: 60px;
+		background-color: #f9f9f9;
+		padding-left: 10px;
+	}
+
+	.navigation i {
+		color: #d9dee5;
+		display: inline-block;
+		font-size: 14px;
+		color: #666666;
+		font-style: normal;
+	}
+
+	.navigation i::after {
+		content: '/';
+		display: inline-block;
+		margin: 0 5px;
+	}
+
+	.navigation span {
+		font-weight: 700;
+		font-size: 14px;
+		color: #666666;
+	}
+
+	/* 商品资料 */
+	.goods {
+		background-color: #fff;
+		padding: 10px 15px;
+		overflow: auto;
+	}
+
+	/* 搜索 */
+	.search {
+		height: 58px;
+		background-color: #f9f9f9;
+		padding: 16px 0px 3px;
+		box-sizing: border-box;
+	}
+
+	.goodsChoose input {
+		border-right: 0 !important;
+	}
+
+	/* tab切换 */
+	.tab .el-menu--horizontal>.el-menu-item {
+		height: 36px;
+		line-height: 36px;
+	}
+
+	/* 商品内容 */
+	.goods_content {
+		margin-top: 20px;
+	}
+
+	.goods_content_l {
+		background-color: #f9f9f9;
+		height: 100%;
+		overflow: auto;
+	}
+
+	.goods_content_l .el-tree {
+		background-color: transparent;
+		padding: 0 10px;
+	}
+
+	.goods_content_l .el-tree .el-tree-node__label {
+		font-size: 13px;
+		font-weight: bold;
+	}
+
+	.goods_content_l .el-tree-node__expand-icon {
+		position: absolute;
+		right: 14px;
+	}
+
+	.goods_content_l .el-tree-node {
+		margin: 15px 0;
+	}
+
+	.goods_content_l .el-tree-node__content:hover {
+		background-color: #f9f9f9;
+	}
+
+	.add_goods {
+		padding: 10px 0 5px 0;
+	}
+
+	.goodsInfo {
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+	}
+
+	.goodsInfo img {
+		width: 50px;
+		height: 50px;
+		margin-right: 5px;
+		background-color: red;
+	}
+
+	.goodsInfo div {
+		flex: 1;
+		font-size: 12px;
+		line-height: 16px;
+	}
+
+	.goodsTitle {
+		background: #5491de;
+		color: #fff;
+		font-style: normal;
+		border-radius: 2px;
+		height: 14px;
+		width: 14px;
+		line-height: 14px;
+		padding: 0;
+		font-size: 12px;
+		display: inline-block;
+		text-align: center;
+		margin-right: 4px;
+	}
+
+	.chlidrenGoodsList li {
+		min-height: 64px;
+		padding: 10px 0;
+		display: flex;
+		padding-left: 80px;
+		border-bottom: 1px solid #f9f9f9;
+	}
+
+	.chlidrenGoodsList li div {
+		align-items: center;
+		display: flex;
+	}
+
+	.el-table--enable-row-transition .el-table__body td {
+		padding: 10px 0 !important;
+	}
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Header Navbar: style can be found in header.less -->
+			[#include "/admin/common/nav.html"]
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				[@user_panel /]
+				<!-- search form -->
+				[@sidebar_form /]
+				<!-- /.search form -->
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">主面板</li>
+					[@menustag id=1]
+					[#list list as item]
+					[@menu item "1,113,115"]
+					[/@menu]
+					[/#list]
+					[/@menustag]
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" id="app" v-cloak>
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<!-- 导航 -->
+				<div class="navigation">
+					<i>商品</i> <span>商品资料</span>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+				<!-- Default box -->
+				<div class="goods">
+
+					<!-- 搜索 -->
+					<div class="search">
+						<el-row>
+							<el-col :span="6" style="padding: 0 8px;">
+								<el-row>
+									<el-col :span="8">
+										<el-select class="goodsChoose" v-model="value" size="small" placeholder="全部商品">
+											<el-option v-for="item in options" :key="item.id" :label="item.name"
+												:value="item.name">
+											</el-option>
+										</el-select>
+									</el-col>
+									<el-col :span="16">
+										<el-input v-model="input" size="small" placeholder="商品名称/SKU编码/条形码"></el-input>
+									</el-col>
+								</el-row>
+							</el-col>
+							<el-col :span="4" style="padding: 0 8px;">
+								<el-input title="SPU编码1" label="SPU编码2" v-model="input" size="small"
+									placeholder="SPU编码"></el-input>
+							</el-col>
+							<el-col :span="4" style="padding: 0 8px;">
+								<el-select v-model="value" size="small" placeholder="请选择商品">
+									<el-option v-for="item in options" :key="item.value" :label="item.label"
+										:value="item.value">
+									</el-option>
+								</el-select>
+							</el-col>
+							<el-col :span="4" style="padding: 0 8px;">
+								<el-select v-model="value" size="small" placeholder="商品标签">
+									<el-option v-for="item in options" :key="item.value" :label="item.label"
+										:value="item.value">
+									</el-option>
+								</el-select>
+							</el-col>
+							<el-col :span="6">
+								<el-row type="flex" justify="end">
+									<el-col :span="6">
+										<el-button size="small" type="primary">搜索</el-button>
+									</el-col>
+									<el-col :span="6" style="margin-right: 16px;">
+										<el-button size="small" plain>清除条件</el-button>
+									</el-col>
+								</el-row>
+							</el-col>
+						</el-row>
+					</div>
+
+					<!-- tab切换 -->
+					<div class="tab">
+						<el-menu :default-active="activeIndex" active-text-color="#5491de" text-color="#666"
+							class="el-menu-demo" mode="horizontal" @select="handleSelect">
+							<el-menu-item index="1">在售中</el-menu-item>
+							<el-menu-item index="2">已售罄</el-menu-item>
+							<el-menu-item index="3">已下架</el-menu-item>
+						</el-menu>
+					</div>
+
+					<!-- 商品 -->
+					<div class="goods_content">
+						<el-row style="height: 100%;">
+							<el-col :span="3" class="goods_content_l">
+								<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>
+							</el-col>
+							<el-col :span="21" style="padding-left: 15px;">
+								<div class="add_goods">
+									<a href="${siteurl}tenant/product/view_add.htm"
+										class="el-button el-button--primary el-button--small">新增商品</a>
+								</div>
+								<el-table :data="tableData" style="width: 100%;font-size: 12px;">
+									<el-table-column type="selection" width="30">
+									</el-table-column>
+									<el-table-column width="40" type="expand" class="chlidrenGoods">
+										<template slot-scope="props" style="padding: 0;">
+											<ul class="chlidrenGoodsList">
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+												<li>
+													<div class="goodsInfo" style="width: 200px;">
+														<img style="width: 40px;height: 40px;" src="" alt="">
+														<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+													</div>
+													<div style="width: 150px;">
+														<i class="goodsTitle">商</i>
+														<span>11</span>
+													</div>
+													<div style="width: 80px;">
+														<span>80</span>
+													</div>
+													<div style="width: 120px;">
+														<span>100 ~ 120</span>
+													</div>
+													<div
+														style="width: 80px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div
+														style="width: 100px;flex-direction: column;align-items: flex-start;justify-content: center;">
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+														<p style="margin: 0;">
+															<i class="goodsTitle">商</i>
+															<span>11</span>
+														</p>
+													</div>
+													<div style="width: 100px;">
+														<span>100</span>
+													</div>
+													<div style="width: 80px;"></div>
+													<div style="flex: 1;">
+														<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+														<span style="color: #5491de;cursor: pointer;">下架</span>
+														<span style="color: #5491de;cursor: pointer;">推广</span>
+													</div>
+												</li>
+											</ul>
+										</template>
+									</el-table-column>
+									<el-table-column label="商品名称/规格" width="200" prop="date">
+										<template slot-scope="scope">
+											<div class="goodsInfo">
+												<img src="" alt="">
+												<div class="goodsName">东北名酒老村长酒老村长善作善成白酒38度整箱450ml*12瓶</div>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column width="150">
+										<template slot="header" slot-scope="scope">
+											<span>商品编码/条码</span>
+											<i class="el-icon-info"></i>
+										</template>
+										<template slot-scope="scope">
+											<div>
+												<i class="goodsTitle">商</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+											<div>
+												<i class="goodsTitle">货</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+											<div>
+												<i class="goodsTitle">条</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column width="80" label="商品分类" prop="name">
+									</el-table-column>
+									<el-table-column width="120" sortable label="销售价" prop="name">
+									</el-table-column>
+									<el-table-column width="80">
+										<template slot="header" slot-scope="scope">
+											<span>生效价</span>
+											<i class="el-icon-info"></i>
+										</template>
+										<template slot-scope="scope">
+											<div>
+												<i class="goodsTitle">阶</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column width="100" sortable prop="name">
+										<template slot="header" slot-scope="scope">
+											<span>库存</span>
+											<i class="el-icon-info"></i>
+										</template>
+										<template slot-scope="scope">
+											<div>
+												<i class="goodsTitle">售</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+											<div>
+												<i class="goodsTitle">占</i>
+												<span>{{scope.row.name}}</span>
+											</div>
+										</template>
+									</el-table-column>
+									<el-table-column width="100" sortable prop="name">
+										<template slot="header" slot-scope="scope">
+											<span>销量</span>
+											<i class="el-icon-info"></i>
+										</template>
+									</el-table-column>
+									<el-table-column width="80" label="是否超卖">
+										<template slot-scope="scope">
+											<el-switch></el-switch>
+										</template>
+									</el-table-column>
+									<el-table-column label="操作">
+										<template slot-scope="scope">
+											<a style="color: #5491de;cursor: pointer;" href="">编辑</a>
+											<span style="color: #5491de;cursor: pointer;">下架</span>
+											<span style="color: #5491de;cursor: pointer;">推广</span>
+										</template>
+									</el-table-column>
+								</el-table>
+							</el-col>
+						</el-row>
+					</div>
+				</div>
+				<!-- /.box -->
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		[#include "/admin/common/footer.html"]
+
+		<!-- Control Sidebar -->
+		[#include "/admin/common/aside.html"]
+
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- jQuery 2.2.3 -->
+	<script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+	<!-- AdminLTE App -->
+	<script src="${siteurl}dist/js/adminlte.min.js"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script src="${siteurl}dist/js/list.js"></script>
+
+
+	<script src="${siteurl}plugins/bootstrap-zTree/bootstrap-treeview.min.js"></script>
+	<script src="${siteurl}plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+
+	<script type="text/javascript">
+
+		// var defaultData = [@goodsCatalogTreeDirective /];
+
+		var options = {
+			bootstrap2: false,
+			showTags: false,
+			levels: 5,
+			showCheckbox: false,
+			checkedIcon: "glyphicon glyphicon-check",
+			data: defaultData,
+			onNodeSelected: function (event, data) {
+				console.log(data.id);
+
+			}
+		};
+		$("#treeview").treeview(options);
+
+		$(document).ready(function () {
+			var contentWrapperHeight = $(".content-wrapper").height();
+			var contentWrapperWidth = $(".content-wrapper").width();
+			var navigationHeight = $(".navigation").height();
+			var mainHeaderHeight = $(".main-header").height();
+			var mainFooterHeight = $(".main-footer").height();
+			var mainFooterPaddingTop = $(".main-footer").css("padding-top");
+			var mainFooterPaddingBottom = $(".main-footer").css("padding-bottom");
+			var height = contentWrapperHeight - navigationHeight - mainHeaderHeight - mainFooterHeight - parseInt(mainFooterPaddingTop) - parseInt(mainFooterPaddingBottom) - 31;
+			console.log(contentWrapperHeight, navigationHeight, mainHeaderHeight, mainFooterHeight, mainFooterPaddingTop, mainFooterPaddingBottom);
+			$(".goods").height(height);
+			$(".goods").width(contentWrapperWidth);
+
+			var searchHeight = $(".search").height();
+			var tabHeight = $(".tab").height();
+
+			$(".goods_content").height(height - searchHeight - tabHeight - 41);
+		});
+	</script>
+
+	<!-- import Vue before Element -->
+	<script src="${siteurl}plugins/vue-element/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="${siteurl}plugins/vue-element/element.js"></script>
+
+	<script>
+		var catalogs = [@productCatalogJson /];
+		var products = [
+			[#list list as item]
+                    {
+				id: "${item.id!}",
+				name: "${item.name!}"
+			}
+			<#sep >,
+			[/#list]
+			];
+		var labels = [@productLabelJson /];
+		var brands = [@brandJson /];;
+		var vm = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					options: labels,
+					value: '',
+					input: '',
+					activeIndex: '1',
+					activeIndex2: '1',
+					data: catalogs,
+					defaultProps: {
+						children: 'children',
+						label: 'name'
+					},
+					tableData: products,
+					search: ''
+				}
+			},
+			mounted: function () { },
+			methods: {
+				handleSelect(key, keyPath) {
+					console.log(key, keyPath);
+				}
+			}
+		})
+	</script>
+
+</body>
+
+</html>

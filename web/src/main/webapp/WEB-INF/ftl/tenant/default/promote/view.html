@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>促销</title>
+	[#include "/admin/common/commons.html"]
+	[#include "/tenant/common/site.html"]
+	[@baseHead /]
+	<style>
+		.goodsInfo {
+			overflow: hidden;
+			display: flex;
+			align-items: center;
+		}
+
+		.goodsInfo img {
+			width: 50px;
+			height: 50px;
+			margin-right: 5px;
+		}
+
+		.goodsInfo div {
+			flex: 1;
+			font-size: 12px;
+			line-height: 16px;
+		}
+
+		.el-dialog .el-dialog__body {
+			padding-top: 0px;
+		}
+	</style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Header Navbar: style can be found in header.less -->
+			[#include "/admin/common/nav.html"]
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				[@user_panel /]
+				<!-- search form -->
+				[@sidebar_form /]
+				<!-- /.search form -->
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">主面板</li>
+					[@menustag id=1]
+					[#list list as item]
+					[@menu item "1,92,94"]
+					[/@menu]
+					[/#list]
+					[/@menustag]
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" id="app">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<!-- 导航 -->
+				<div class="navigation">
+					<i>首页</i> <span>订货会添加商品</span>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+				<!-- Default box -->
+				<div style="padding: 10px 2px;">
+					<a @click="showProducts" class="el-button el-button--primary el-button--small">添加商品</a>
+				</div>
+
+				<el-table :data="tableData.list" style="width: 100%;font-size: 12px;">
+					<el-table-column label="商品名称/规格" width="200" prop="date">
+						<template slot-scope="scope">
+							<div class="goodsInfo">
+								<img :src="scope.row.logo" alt="">
+								<div class="goodsName">{{scope.row.name}}</div>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column width="150">
+						<template slot="header" slot-scope="scope">
+							<span>商品编码/条码</span>
+							<i class="el-icon-info"></i>
+						</template>
+						<template slot-scope="scope">
+							<div v-if="scope.row.goodsCode">
+								<i class="goodsTitle">商</i>
+								<span>{{scope.row.goodsCode}}</span>
+							</div>
+							<div v-if="scope.row.orderCode">
+								<i class="goodsTitle">货</i>
+								<span>{{scope.row.orderCode}}</span>
+							</div>
+							<div v-if="scope.row.barCode">
+								<i class="goodsTitle">条</i>
+								<span>{{scope.row.barCode}}</span>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column width="80" label="商品分类" prop="catalog">
+					</el-table-column>
+					<el-table-column width="120" sortable label="市场价" prop="marketPrice">
+					</el-table-column>
+					<el-table-column width="120" sortable label="销售价" prop="salePrice">
+					</el-table-column>
+					<el-table-column width="120" sortable label="订货会价格" prop="price">
+					</el-table-column>
+					<el-table-column width="260" align="center" fixed="right" label="操作">
+						<template slot-scope="scope">
+							<el-button @click="showPrice(scope.row)" type="primary" size="mini">设置订货会价格</el-button>
+							<span class="el-button el-button--danger el-button--mini " style="cursor: pointer;"
+								@click="deleteData(scope.row)">删除</span>
+						</template>
+					</el-table-column>
+				</el-table>
+
+				<div class="page">
+					<el-pagination background :current-page="searchObject.no" :page-size="tableData.size"
+						:pager-count="5" layout="prev, pager, next" :page-count="tableData.totalPage"
+						:total="tableData.total" @current-change="pageChange">
+					</el-pagination>
+				</div>
+
+
+				<!-- /.box -->
+			</section>
+
+			<el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+				<span>确认要删除该条数据吗</span>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialogVisible = false">取 消</el-button>
+					<el-button type="primary" @click="handleClose">确 定</el-button>
+				</span>
+			</el-dialog>
+
+			<el-dialog title="添加商品" :visible.sync="productVisible" width="50%">
+				<div class="search">
+					<el-form label-width="80px">
+						<el-row>
+							<el-col :span="18" style="padding: 0 8px;">
+								<el-form-item label="商品名称">
+									<el-input title="商品名称" label="活动名称" v-model="searchProduct.name" size="small"
+										placeholder="商品名称"></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col :span="6" style="padding: 5px 10px;">
+								<el-row type="flex" justify="end">
+									<el-button size="small" type="primary" @click="searchProductData">搜索</el-button>
+									<el-button size="small" plain @click="clearProductData">清除条件</el-button>
+								</el-row>
+							</el-col>
+						</el-row>
+					</el-form>
+				</div>
+				<el-table height="300" :data="productData.list" style="width: 100%">
+					<el-table-column label="商品名称/规格" width="200" prop="date">
+						<template slot-scope="scope">
+							<div class="goodsInfo">
+								<img :src="scope.row.logo" alt="">
+								<div class="goodsName">{{scope.row.name}}</div>
+							</div>
+						</template>
+					</el-table-column>
+					<el-table-column width="80" label="商品分类" prop="catalog">
+					</el-table-column>
+					<el-table-column width="120" sortable label="市场价" prop="marketPrice">
+					</el-table-column>
+					<el-table-column width="120" sortable label="销售价" prop="salePrice">
+					</el-table-column>
+					<el-table-column align="right">
+						<template slot-scope="scope">
+							<el-button size="mini" @click="handleAdd(scope.row)">添加到活动</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+				<div class="page">
+					<el-pagination background :current-page="searchProduct.no" :page-size="productData.size"
+						:pager-count="5" layout="prev, pager, next" :page-count="productData.totalPage"
+						:total="productData.total" @current-change="productPageChange">
+					</el-pagination>
+				</div>
+				<span slot="footer" class="dialog-footer">
+					<el-button type="primary" @click="productVisible = false">确 定</el-button>
+				</span>
+			</el-dialog>
+
+			<el-dialog title="设置订货会价格" :visible.sync="priceVisible" width="50%">
+				<el-form label-width="100px" ref="form" :model="form">
+					<el-form-item label="商品名称">
+						<el-input title="商品名称" label="商品名称" :disabled="true" v-model="form.name" size="small"
+							placeholder="商品名称"></el-input>
+					</el-form-item>
+					<el-form-item label="销售价格">
+						<el-input title="销售价格" label="销售价格" :disabled="true" v-model="form.salePrice" size="small"
+							placeholder="销售价格"></el-input>
+					</el-form-item>
+					<el-form-item label="订货会价格" prop="price" :rules="[
+						{ required: true, message: '订货会价格不能为空'}
+					  ]">
+						<el-input title="订货会价格" label="订货会价格" v-model="form.price" size="small" placeholder="订货会价格">
+						</el-input>
+					</el-form-item>
+				</el-form>
+				<span slot="footer" class="dialog-footer">
+					<el-button type="primary" @click="updatePrice">确 定</el-button>
+				</span>
+			</el-dialog>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		[#include "/admin/common/footer.html"]
+
+		<!-- Control Sidebar -->
+		[#include "/admin/common/aside.html"]
+
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+	[@baseScript /]
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					searchObject: {
+						no: 1,
+						size: 10,
+						beginDate: '',
+						endDate: '',
+						label: '',
+						name: '',
+						code: '',
+						state: ''
+					},
+					searchProduct: {
+						no: 1,
+						size: 10,
+						beginDate: '',
+						endDate: '',
+						label: '',
+						name: '',
+						code: '',
+						state: ''
+					},
+					dialogVisible: false,
+					productVisible: false,
+					priceVisible: false,
+					defaultProps: {
+						children: 'children',
+						label: 'name'
+					},
+					form: {
+						id: "",
+						name: "",
+						price: "",
+						salePrice: ""
+					},
+					tableData: {},
+					productData: {},
+					productName: ""
+				}
+			},
+			mounted: function () {
+				this.getSearchList();
+			},
+			methods: {
+				// 搜索商品
+				showPrice(event) {
+					this.priceVisible = true;
+					this.form.id = event.id;
+					this.form.salePrice = event.salePrice;
+					this.form.name = event.name;
+				},
+				updatePrice() {
+					var self = this;
+					this.$refs["form"].validate((valid) => {
+						if (valid) {
+							self.updateDataPost();
+							self.priceVisible=false;
+						} else {
+							console.log('error submit!!');
+							return false;
+						}
+					});
+				},
+				updateDataPost() {
+					
+					var that = this;
+					var data=that.form;
+					const loading = this.$loading({
+						lock: true,
+						text: '数据处理中',
+						spinner: 'el-icon-loading',
+						background: 'rgba(0, 0, 0, 0.7)'
+					});
+
+					$.post("${siteurl}tenantRest/promoteproduct/update.htm", data, function (res) {
+						setTimeout(() => {
+							loading.close();
+						}, 300);
+						if (res.code == 0) {
+							that.modelType = 'list';
+							that.$message({
+								message: '修改数据成功',
+								type: 'success'
+							});
+							that.getSearchList();
+						} else {
+							that.$message.error(res.msg);
+						}
+					});
+				},
+				search() {
+					this.searchObject.no = 1;
+					this.getSearchList();
+				},
+				searchProductData() {
+					this.searchProduct.no = 1;
+					this.getProductList();
+				},
+				// 获取商品列表
+				getSearchList() {
+					var data = this.searchObject, that = this;
+					data.promote = ${ model.id! };
+					$.post("${siteurl}tenantRest/promoteproduct/search.htm", data, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'tableData', result);
+						}
+					});
+				},
+				getProductList() {
+					var self = this;
+					$.post("${siteurl}tenantRest/product/search.htm", self.searchProduct, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'productData', result);
+						}
+					});
+				},
+				// 商品分页
+				pageChange(index) {
+					this.searchObject.no = index;
+					this.getSearchList();
+				},
+				productPageChange(index) {
+					this.searchProduct.no = index;
+					this.showProducts();
+				},
+				deleteData(event) {
+					this.selectId = event.id;
+					this.dialogVisible = true;
+				},
+				clearData() {
+					this.searchObject.beginDate = "";
+					this.searchObject.endDate = "";
+					this.searchObject.name = "";
+				},
+				clearProductData() {
+					this.searchProduct.beginDate = "";
+					this.searchProduct.endDate = "";
+					this.searchProduct.name = "";
+				},
+				showProducts() {
+					var self = this;
+					$.post("${siteurl}tenantRest/product/search.htm", self.searchProduct, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'productData', result);
+						}
+						self.productVisible = true;
+					});
+
+				},
+				handleAdd(event) {
+					var self = this;
+					var params = {};
+					params.product = event.id;
+					params.promote = ${ model.id! };
+					$.post("${siteurl}tenantRest/promoteproduct/create.htm", params, function (result) {
+						if (result.code == 0) {
+							self.$message({
+								message: '添加成功',
+								type: 'success'
+							});
+							self.getSearchList();
+							self.productVisible = false;
+						} else {
+							self.$message.error(result.msg);
+						}
+					});
+				},
+				handleClose(done) {
+					this.dialogVisible = false;
+					var self = this;
+					if (self.selectId) {
+						var params = {};
+						params.id = self.selectId;
+						$.post("${siteurl}tenantRest/promoteproduct/delete.htm", params, function (res) {
+							if (res.code == 0) {
+								self.$message({
+									message: '删除数据成功',
+									type: 'success'
+								});
+								self.getSearchList();
+							} else {
+								self.$message.error(res.msg);
+							}
+						});
+					}
+					done();
+				}
+			}
+		})
+	</script>
+
+</body>
+
+</html>

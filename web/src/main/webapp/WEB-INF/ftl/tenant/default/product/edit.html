@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>商品信息</title>
+	<!-- Tell the browser to be responsive to screen width -->
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<!-- Bootstrap 3.3.6 -->
+	<link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+	<!-- Ionicons -->
+	<link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+	<!-- Theme style -->
+	<link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+	<!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+	<link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+	<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+	<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+	<![endif]-->
+	[#include "/admin/common/commons.html"]
+
+	<!-- jQuery 2.2.3 -->
+	<script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+	<script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+	<!-- SlimScroll -->
+	<script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+	<!-- FastClick -->
+	<script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+	<!-- AdminLTE App -->
+	<script src="${siteurl}dist/js/adminlte.min.js"></script>
+	<link rel="stylesheet" href="${siteurl}plugins/vue-element/element.css">
+
+	<link href="${siteurl}dist/js/summernote/dist/summernote.css" rel="stylesheet" />
+	<script src="${siteurl}dist/js/summernote/dist/summernote.js"></script>
+	<script src="${siteurl}dist/js/summernote/dist/lang/summernote-zh-CN.js"></script>
+</head>
+<style>
+	.content-header {
+		padding: 0;
+	}
+
+	.el-checkbox {
+		margin-bottom: 0;
+	}
+
+	.content {
+		padding: 0 10px 10px;
+		background-color: #f9f9f9;
+		overflow-y: auto;
+	}
+
+	ul {
+		padding: 0;
+		margin: 0;
+		list-style: none;
+	}
+
+	[v-cloak] {
+		display: none;
+	}
+
+	h3 {
+		margin-top: 15px;
+		margin-bottom: 24px;
+		padding-bottom: 10px;
+		font-size: 14px;
+		line-height: 16px;
+		border-bottom: 1px solid #e9e9e9;
+	}
+
+	h3 span {
+		display: block;
+		padding-left: 10px;
+		margin-right: 5px;
+		border-left: 3px solid #5491de;
+	}
+
+	.el-dialog__header {
+		padding: 14px 16px;
+		border-radius: 2px 2px 0 0;
+		background: #fff;
+		color: #666;
+		border-bottom: 1px solid #e9e9e9;
+	}
+
+	.el-dialog__header .el-dialog__title {
+		margin: 0;
+		font-size: 14px;
+		line-height: 21px;
+		font-weight: bold;
+	}
+
+	.el-dialog__header .el-dialog__headerbtn {
+		top: 14px;
+	}
+
+	.el-dialog__body {
+		padding: 20px 20px 0;
+	}
+
+	.el-radio {
+		margin-bottom: 0;
+	}
+
+	/* 导航 */
+	.navigation {
+		height: 60px;
+		line-height: 60px;
+		background-color: #f9f9f9;
+		padding-left: 10px;
+	}
+
+	.navigation i {
+		color: #d9dee5;
+		display: inline-block;
+		font-size: 14px;
+		color: #666666;
+		font-style: normal;
+	}
+
+	.navigation i::after {
+		content: '/';
+		display: inline-block;
+		margin: 0 5px;
+	}
+
+	.navigation span {
+		font-weight: 700;
+		font-size: 14px;
+		color: #666666;
+	}
+
+	.el-menu--horizontal>.el-menu-item {
+		height: 36px;
+		line-height: 36px;
+	}
+
+	.goods_content {
+		padding: 15px;
+		background-color: #fff;
+		height: 100%;
+	}
+
+	/* 商品信息 */
+	.goodsInfoFrom {}
+
+	.fromTitle {
+		padding-left: 10px;
+		font-size: 12px;
+		color: #999;
+	}
+
+	.el-form-item__label {
+		font-size: 12px;
+		color: #666;
+		font-weight: 400;
+	}
+
+	.goodsInfoFrom .el-select {
+		width: 100%;
+	}
+
+	.el-form-item {
+		margin-bottom: 20px;
+	}
+
+	.el-form-item__label {
+		margin-bottom: 0;
+	}
+
+	.el-radio-button {
+		margin-right: 10px;
+	}
+
+	.el-radio-button--small .el-radio-button__inner {
+		border-radius: 4px;
+		border: 1px solid #DCDFE6;
+	}
+
+	.el-radio-button:first-child .el-radio-button__inner,
+	.el-radio-button:last-child .el-radio-button__inner {
+		border-radius: 4px;
+	}
+
+	.avatar-uploader .el-upload {
+		border: 1px dashed #d9d9d9;
+		border-radius: 6px;
+		cursor: pointer;
+		position: relative;
+		overflow: hidden;
+		width: 64px;
+		height: 64px;
+	}
+
+	.avatar-uploader .el-upload:hover {
+		border-color: #409EFF;
+	}
+
+	.el-upload--picture-card {
+		background-color: #fbfdff;
+		border: 1px dashed #c0ccda;
+		border-radius: 6px;
+		box-sizing: border-box;
+		width: 64px;
+		height: 64px;
+		line-height: 64px;
+		vertical-align: top;
+	}
+
+	.el-upload--picture-card i {
+		font-size: 18px;
+	}
+
+	.el-upload--picture-card input {
+		display: none;
+	}
+
+	.el-upload-list--picture-card .el-upload-list__item {
+		overflow: hidden;
+		background-color: #fff;
+		border: 1px solid #c0ccda;
+		border-radius: 6px;
+		-webkit-box-sizing: border-box;
+		box-sizing: border-box;
+		width: 64px;
+		height: 64px;
+		margin: 0 8px 8px 0;
+		display: inline-block;
+	}
+
+	.el-upload-list--picture-card .el-upload-list__item-actions span+span {
+		margin-left: 10px;
+	}
+
+	[class*=" el-icon-"],
+	[class^=el-icon-] {
+		font-size: 14px;
+	}
+
+	/* 购买信息 */
+	.buyInfo {
+		font-size: 12px;
+		color: #666;
+	}
+
+	.buyInfo .buyTitle {
+		margin-left: 10px;
+		font-style: normal;
+	}
+
+	.buyInfo .el-checkbox__label {
+		font-size: 12px;
+		color: #666;
+	}
+
+	.page .total {
+		line-height: 32px;
+		color: #666666;
+		font-size: 12px;
+	}
+
+	/* 规格信息 */
+	.addSpecificationsList {
+		border-bottom: 1px dashed #e9e9e9;
+		opacity: 0.9;
+		cursor: pointer;
+	}
+
+	.addSpecificationsList .addSpecificationsItem {
+		padding: 10px 0;
+		margin: 10px 10px;
+		border: 1px dashed #fff;
+	}
+
+	.addSpecificationsList .addSpecificationsItem:hover {
+		border-color: #ccc;
+	}
+
+	.addSpecificationsList .delect {
+		position: absolute;
+		right: -3px;
+		top: -7px;
+		font-size: 18px;
+		color: rgba(0, 0, 0, 0.2);
+	}
+
+	.addSpecificationsList ul {
+		margin-top: 10px;
+	}
+
+	.addSpecificationsList li {
+		display: inline-block;
+		line-height: 20px;
+		height: 22px;
+		padding: 0 8px;
+		border-radius: 2px;
+		border: 1px solid #e9e9e9;
+		background: #f7f7f7;
+		font-size: 12px;
+		transition: all 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+		vertical-align: middle;
+		opacity: 1;
+		overflow: hidden;
+		margin: 4px 8px 4px 0;
+		cursor: pointer;
+		color: #666;
+		cursor: pointer;
+	}
+
+	.addSpecificationsList li i {
+		margin-left: 3px;
+		color: #666;
+		font-size: 12px;
+	}
+
+	.addSpecificationsList li:hover {
+		opacity: 0.85;
+	}
+
+	.addSpecificationsList .addSpecificationsValue {
+		font-size: 12px;
+		color: #5491de;
+		line-height: 32px;
+	}
+
+	.goodsTitle {
+		line-height: 32px;
+		text-align: right;
+		color: #666;
+		font-size: 12px;
+		padding-left: 10px;
+	}
+
+	.next {
+		text-align: center;
+		margin: 10px 0;
+	}
+
+	::-webkit-input-placeholder {
+		font-size: 12px;
+	}
+
+	.avatar-uploader .el-upload {
+		border: 1px dashed #d9d9d9;
+		border-radius: 6px;
+		cursor: pointer;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.avatar-uploader .el-upload:hover {
+		border-color: #409EFF;
+	}
+
+	.avatar-uploader-icon {
+		font-size: 20px;
+		color: #8c939d;
+		width: 100%;
+		height: 100%;
+		line-height: 62px;
+		text-align: center;
+	}
+
+	.avatar {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+</style>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Header Navbar: style can be found in header.less -->
+			[#include "/admin/common/nav.html"]
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				<!-- Sidebar user panel -->
+				[@user_panel /]
+				<!-- search form -->
+				[@sidebar_form /]
+				<!-- /.search form -->
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">主面板</li>
+					[@menustag id=1]
+					[#list list as item]
+					[@menu item "1,113,115"]
+					[/@menu]
+					[/#list]
+					[/@menustag]
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<!-- 导航 -->
+				<div class="navigation">
+					<i>商品</i><i>新增商品</i> <span>自助上货</span>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+
+				<!-- Default box -->
+				<!-- 内容 -->
+				<div class="goods_content" id="app" v-cloak>
+
+					<!-- 基本信息 -->
+					<div>
+						<!-- 商品信息 -->
+						<div class="goodsInfo">
+							<h3>
+								<span>商品信息</span>
+							</h3>
+							<div class="goodsInfoFrom">
+								<el-form ref="form" :rules="form_rules" :model="form" label-width="100px">
+									<el-row>
+										<el-col :span="24">
+											<el-form-item label="商品主图：">
+												<el-row>
+													<el-col :span="12">
+														<el-upload class="avatar-uploader"
+															action="https://saas.metamall.cn/storage/upload.htm"
+															:show-file-list="false" :on-success="goodsImgSuccess">
+															<img v-if="form.logo" :src="form.logo" class="avatar">
+															<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+														</el-upload>
+													</el-col>
+													<el-col :span="24">
+														<span class="fromTitle">建议尺寸：800*800PX，单张大小不超过2M。</span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+										</el-col>
+										<el-col :span="12">
+											<el-form-item label="商品名称：" prop="name">
+												<el-row>
+													<el-col :span="12">
+														<el-input size="small" v-model="form.name"
+															placeholder="商品名称,2-120字"></el-input>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle" style="margin-left: 10px;"></span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="商品编码：" prop="barCode">
+												<el-row>
+													<el-col :span="12">
+														<el-input size="small" v-model="form.barCode"
+															placeholder="商品编码,2-120字"></el-input>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle" style="margin-left: 10px;"></span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="展示分类：" prop="catalog">
+												<el-row>
+													<el-col :span="12">
+														<el-cascader placeholder="请选择分类" style="width: 100%;"
+															size="small" v-model="form.catalog" :options="showOptions"
+															:props="props" clearable>
+														</el-cascader>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle"
+															style="margin-left: 10px;color: #508ad3;cursor: pointer;"
+															@click="openDoodsInfo('新增分类')">＋新增分类</span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="商品品牌：">
+												<el-row>
+													<el-col :span="12">
+														<el-select v-model="form.brand" size="small"
+															placeholder="请选择品牌">
+															<el-option v-for="item in brandOptions" :key="item.id"
+																:label="item.name" :value="item.id">
+															</el-option>
+														</el-select>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle"
+															style="margin-left: 10px;color: #508ad3;cursor: pointer;"
+															@click="openDoodsInfo('新增品牌')">＋新增品牌</span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="成本价：">
+												<el-row>
+													<el-col :span="12">
+														<el-input size="small" v-model="form.costPrice"
+															placeholder="商品名称,2-120字"></el-input>
+													</el-col>
+													<el-col :span="12"></el-col>
+												</el-row>
+											</el-form-item>
+										</el-col>
+										<el-col :span="12">
+											<el-form-item label="计量单位：" prop="unit">
+												<el-row>
+													<el-col :span="12">
+														<el-select v-model="form.unit" size="small"
+															placeholder="您可以搜索单位或输入并回车新增单位">
+															<el-option v-for="item in measurementOptions"
+																:key="item.name" :label="item.name" :value="item.name">
+															</el-option>
+														</el-select>
+													</el-col>
+													<el-col :span="12"></el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="标签：">
+												<el-row>
+													<el-col :span="12">
+														<el-select size="small" v-model="form.label" placeholder="标签">
+															<el-option v-for="item in brandLabelOptions" :key="item.id"
+																:label="item.name" :value="item.id">
+															</el-option>
+														</el-select>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle"
+															style="margin-left: 10px;color: #508ad3;cursor: pointer;"
+															@click="openDoodsInfo('新增标签')">新增标签</span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="供货商：">
+												<el-row>
+													<el-col :span="12">
+														<el-select size="small" v-model="form.supplier"
+															placeholder="请选择供货商">
+															<el-option v-for="item in supplierOptions" :key="item.id"
+																:label="item.name" :value="item.id">
+															</el-option>
+														</el-select>
+													</el-col>
+													<el-col :span="12">
+														<span class="fromTitle"
+															style="margin-left: 10px;color: #508ad3;cursor: pointer;"
+															@click="openDoodsInfo('新增供货商')">新增供货商</span>
+													</el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="市场价：">
+												<el-row>
+													<el-col :span="12">
+														<el-input size="small" v-model="form.marketPrice"
+															placeholder="商品名称,2-120字"></el-input>
+													</el-col>
+													<el-col :span="12"></el-col>
+												</el-row>
+											</el-form-item>
+											<el-form-item label="销售价：">
+												<el-row>
+													<el-col :span="12">
+														<el-input size="small" v-model="form.salePrice"
+															placeholder="商品名称,2-120字"></el-input>
+													</el-col>
+												</el-row>
+											</el-form-item>
+										</el-col>
+									</el-row>
+									<el-form-item>
+										<div class="next">
+											<el-button size="small" @click="onSubmit('form')">保存并返回</el-button>
+										</div>
+									</el-form-item>
+								</el-form>
+							</div>
+
+							<el-dialog :title="goodsTitle" :visible.sync="goodsState" width="40%"
+								:before-close="handleClose">
+								<el-row :gutter="20" v-if="goodsTitle == '新增分类'">
+									<el-col :span="20" :offset="2">
+										<el-row>
+											<el-col :span="4">
+												<div class="goodsTitle">上级分类：</div>
+											</el-col>
+											<el-col :span="14">
+												<el-cascader size="small" v-model="form_classify.parent"
+													style="width: 100%;" placeholder="请选择或输入内容" :options="showOptions"
+													:props="props" filterable>
+												</el-cascader>
+											</el-col>
+											<el-col :span="6">
+												<div style="color: #999;text-align: left;" class="goodsTitle">
+													顶级分类请选择[无]
+												</div>
+											</el-col>
+										</el-row>
+										<el-row style="margin-top: 10px;">
+											<el-col :span="4">
+												<div class="goodsTitle">* 分类名称：</div>
+											</el-col>
+											<el-col :span="14">
+												<el-input size="small" style="width: 100%;"
+													v-model="form_classify.name"></el-input>
+											</el-col>
+											<el-col :span="6"></el-col>
+										</el-row>
+									</el-col>
+								</el-row>
+								<el-row :gutter="20" v-if="goodsTitle == '新增品牌'">
+									<el-col :span="20" :offset="2">
+										<el-row>
+											<el-col :span="4">
+												<div class="goodsTitle">* 品牌名称：</div>
+											</el-col>
+											<el-col :span="14">
+												<el-input size="small" style="width: 100%;" v-model="form_brand.name"
+													placeholder="请输入品牌名称"></el-input>
+											</el-col>
+											<el-col :span="6"></el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="14" :offset="4">
+												<div class="goodsTitle"
+													style="color: #999;text-align: left;padding: 0;">请输入数字、英文和汉字，限1-40字
+												</div>
+											</el-col>
+										</el-row>
+									</el-col>
+								</el-row>
+								<el-row :gutter="20" v-if="goodsTitle == '新增标签'">
+									<el-col :span="20" :offset="2">
+										<el-row>
+											<el-col :span="4">
+												<div class="goodsTitle">* 标签名称：</div>
+											</el-col>
+											<el-col :span="14">
+												<el-input size="small" style="width: 100%;" v-model="form_label.name"
+													placeholder="请输入标签名称"></el-input>
+											</el-col>
+											<el-col :span="6"></el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="14" :offset="4">
+												<div class="goodsTitle"
+													style="color: #999;;text-align: left;padding: 0;">请输入数字、英文和汉字，限1-6字
+												</div>
+											</el-col>
+										</el-row>
+									</el-col>
+								</el-row>
+								<el-row :gutter="20" v-if="goodsTitle == '新增供货商'">
+									<el-col :span="20" :offset="2">
+										<el-row>
+											<el-col :span="5">
+												<div class="goodsTitle">* 供货商名称：</div>
+											</el-col>
+											<el-col :span="14">
+												<el-input size="small" style="width: 100%;" v-model="form_supplier.name"
+													placeholder="请输入供货商名称"></el-input>
+											</el-col>
+											<el-col :span="5"></el-col>
+										</el-row>
+										<el-row>
+											<el-col :span="14" :offset="5">
+												<div class="goodsTitle"
+													style="color: #999;;text-align: left;padding: 0;">请输入数字、英文和汉字，限1-6字
+												</div>
+											</el-col>
+										</el-row>
+									</el-col>
+								</el-row>
+								<span slot="footer" class="dialog-footer">
+									<el-button size="small" @click="goodsState = false">取 消</el-button>
+									<el-button size="small" type="primary" @click="addGoodsInfo">确 定</el-button>
+								</span>
+							</el-dialog>
+						</div>
+					</div>
+				</div>
+				<!-- /.box -->
+
+			</section>
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		[#include "/admin/common/footer.html"]
+
+		<!-- Control Sidebar -->
+		[#include "/admin/common/aside.html"]
+
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+
+	<!-- import Vue before Element -->
+	<script src="${siteurl}plugins/vue-element/vue.js"></script>
+	<!-- import JavaScript -->
+	<script src="${siteurl}plugins/vue-element/element.js"></script>
+
+	<script>
+		var brands = [@brandJson /];
+		var labels = [@productLabelJson /];
+		var suppliers = [@supplierJson /];
+		var catalogs = [@productCatalogJson /];
+		var units = [@selectByKeyJson key = "unit" /];
+		units = units.map(item => {
+			var temp = {};
+			temp.id = item.id;
+			temp.name = item.label;
+			return temp;
+		});
+		console.info(units);
+		var vm = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					options: '',
+					dialogImageUrl: '',
+					dialogVisible: false,
+					showOptions: catalogs,
+					brandOptions: brands,
+					supplierOptions: suppliers,
+					brandLabelOptions: labels,
+					measurementOptions: units,
+					props: { checkStrictly: true, emitPath: false, label: "name", value: "id" },
+					goodsState: false,
+					goodsTitle: '',
+					form: {
+						unit: '',
+						name: '',
+						show: '',
+						brand: '',
+						supplier: '',
+						masterMap: '',
+						placeOrigin: '',
+						marketPrice: '',
+						costPrice: '',
+						salesPrice: '',
+						label: ""
+					},
+					form_rules: {
+						name: [
+							{
+								required: true, //是否必填
+								message: '用户名不能为空', //规则提示
+								trigger: 'blur'  //何事件触发
+							},
+							//可以设置多重验证标准
+							{
+								min: 2,
+								max: 120,
+								message: '长度在 2 到 120 个字符'
+							}
+						],
+						catalog: [
+							{
+								required: true, //是否必填
+								message: '展示分类不能为空', //规则提示
+								trigger: 'change'  //何事件触发
+							}
+						],
+						unit: [
+							{
+								required: true, //是否必填
+								message: '计量单位不能为空', //规则提示
+								trigger: 'change'  //何事件触发
+							}
+						]
+					},
+					form_brand: {
+						name: ''
+					},
+					form_classify: {
+						parent: '',
+						name: ''
+					},
+					form_label: {
+						name: ''
+					},
+					form_supplier: {
+						name: ''
+					}
+				}
+			},
+			mounted: function () {
+				var contentWrapperHeight = $(".content-wrapper").height();
+				var contentWrapperWidth = $(".content-wrapper").width();
+				var navigationHeight = $(".navigation").height();
+				var mainHeaderHeight = $(".main-header").height();
+				var mainFooterHeight = $(".main-footer").height();
+				var mainFooterPaddingTop = $(".main-footer").css("padding-top");
+				var mainFooterPaddingBottom = $(".main-footer").css("padding-bottom");
+				var height = contentWrapperHeight - navigationHeight - mainHeaderHeight - mainFooterHeight - 41;
+				console.log(height, contentWrapperHeight, navigationHeight, mainHeaderHeight, mainFooterHeight, mainFooterPaddingTop, mainFooterPaddingBottom);
+				//$(".content").height(height);
+				var data = { id: this.getUrlParam('id') }, that = this;
+				$.post("${siteurl}tenantRest/product/view.htm", data, function (result) {
+					if (result.code == 0) {
+						that.form = result;
+					}
+				});
+			},
+			methods: {
+				getUrlParam(name) {
+					//构造一个含有目标参数的正则表达式对象
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+					var r = window.location.search.substr(1).match(reg); //匹配目标参数
+					if (r != null) {
+						return unescape(r[2]);
+					} else {
+						return null; //返回参数值
+					}
+				},
+				onSubmit(form) {
+					var that = this, data = this.form;
+					console.log(form);
+					this.$refs[form].validate(valid => {
+						console.log(valid)
+						if (valid) {
+							$.post("${siteurl}tenantRest/product/update.htm", data, function (result) {
+								if (result.code == 0) {
+									that.$message({
+										message: '恭喜你，修改商品成功',
+										type: 'success'
+									});
+									window.location.href = "${siteurl}tenant/product/view_list.htm";
+								} else {
+									that.$message.error('修改商品失败');
+								}
+							});
+						} else {
+							return false
+						}
+					})
+				},
+				// 添加商品信息
+				// 添加商品信息
+				addGoodsInfo() {
+					var that = this;
+					this.goodsState = false;
+					if (this.goodsTitle == '新增分类') {
+						console.log(this.form_classify);
+						var data = this.form_classify;
+						var that = this;
+						$.post("${siteurl}tenantRest/productcatalog/create.htm", data, function (result) {
+							if (result.code == 0) {
+								that.refreshCatalog();
+								that.$message({
+									message: '恭喜你，新增分类成功',
+									type: 'success'
+								});
+							} else {
+								that.$message.error('新增分类失败');
+							}
+						});
+					} else if (this.goodsTitle == '新增品牌') {
+						console.log(this.form_brand);
+						var data = this.form_brand;
+						var that = this;
+						$.post("${siteurl}tenantRest/brand/create.htm", data, function (result) {
+							if (result.code == 0) {
+								that.refreshBrand();
+								that.$message({
+									message: '恭喜你，新增品牌成功',
+									type: 'success'
+								});
+							} else {
+								that.$message.error('新增品牌失败');
+							}
+						});
+					} else if (this.goodsTitle == '新增标签') {
+						var data = this.form_label;
+						$.post("${siteurl}tenantRest/productlabel/create.htm", data, function (result) {
+							if (result.code == 0) {
+								that.refreshLabels();
+								that.$message({
+									message: '恭喜你，新增标签成功',
+									type: 'success'
+								});
+							} else {
+								that.$message.error('新增标签失败');
+							}
+						});
+					} else if (this.goodsTitle == '新增供货商') {
+						console.log(this.form_supplier);
+						var data = this.form_supplier;
+						var that = this;
+						$.post("${siteurl}tenantRest/supplier/create.htm", data, function (result) {
+							if (result.code == 0) {
+								that.refreshSupplier();
+								that.$message({
+									message: '恭喜你，新增供货商成功',
+									type: 'success'
+								});
+							} else {
+								that.$message.error('新增供货商失败');
+							}
+						});
+					}
+				},
+				// 新增商品
+				addGoods() {
+					console.log(this.form);
+					var data = this.form;
+					var that = this;
+					$.post("${siteurl}tenantRest/product/update.htm", data, function (result) {
+						if (result.code == 0) {
+							window.location.href = "${siteurl}tenant/product/view_list.htm";
+							that.$message({
+								message: '恭喜你，新增商品成功',
+								type: 'success'
+							});
+						} else {
+							that.$message.error('新增商品失败');
+						}
+					});
+				},
+				refreshLabels() {
+					$.post("${siteurl}tenantRest/productlabel/search.htm", {}, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'brandLabelOptions', result.list);
+						}
+					});
+				},
+				refreshSupplier() {
+					$.post("${siteurl}tenantRest/supplier/search.htm", {}, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'supplierOptions', result.list);
+						}
+					});
+				},
+				refreshBrand() {
+					$.post("${siteurl}tenantRest/brand/all.htm", {}, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'brandOptions', result.list);
+						}
+					});
+				},
+				refreshCatalog() {
+					$.post("${siteurl}tenantRest/productcatalog/list.htm", {}, function (result) {
+						if (result.code == 0) {
+							Vue.set(vm.$data, 'showOptions', result.list);
+						}
+					});
+				},
+				// 上传商品主图成功
+				goodsImgSuccess(res, file) {
+					this.form.logo = res.url;
+				},
+				handleRemove() { },
+				addTemplate(event) {
+					console.log(event);
+				},
+				openDoodsInfo(title) {
+					this.goodsTitle = title;
+					this.goodsState = true;
+				},
+				handleSelect(key, keyPath) {
+					console.log(key, keyPath);
+					this.activeIndex = key;
+				},
+				// handlePictureCardPreview(file) {
+				// 	this.dialogImageUrl = file.url;
+				// 	this.dialogVisible = true;
+				// },
+				handleClose(done) {
+					done();
+				}
+			}
+		})
+	</script>
+</body>
+
+</html>

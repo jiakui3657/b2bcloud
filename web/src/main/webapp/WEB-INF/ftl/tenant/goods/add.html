@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>添加商品</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="${siteurl}bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="${siteurl}plugins/FontAwesome/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="${siteurl}plugins/ionicons201/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="${siteurl}dist/css/AdminLTE.min.css">
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+         folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="${siteurl}dist/css/skins/_all-skins.min.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    [#include "/admin/common/commons.html"]
+
+    <!-- jQuery 2.2.3 -->
+    <script src="${siteurl}plugins/jQuery/jquery-2.2.3.min.js"></script>
+    <!-- Bootstrap 3.3.6 -->
+    <script src="${siteurl}bootstrap/js/bootstrap.min.js"></script>
+    <!-- SlimScroll -->
+    <script src="${siteurl}plugins/slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- FastClick -->
+    <script src="${siteurl}plugins/fastclick/fastclick.js"></script>
+    <!-- AdminLTE App -->
+    <script src="${siteurl}dist/js/adminlte.min.js"></script>
+
+
+    <script src="${siteurl}plugins/bootstrap-zTree/bootstrap-treeview.min.js"></script>
+    <script src="${siteurl}plugins/zTree_v3/js/jquery.ztree.core.min.js"></script>
+    <link href="${siteurl}plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" rel="stylesheet">
+
+
+
+
+    <link href="https://cdn.bootcss.com/select2/4.0.10/css/select2.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/select2/4.0.10/js/select2.min.js"></script>
+
+    <style>
+        .popover {
+            max-width: 400px;
+        }
+
+        .popover-content {
+            padding: 0px 0px;
+        }
+
+        .form-group[name='share'] button {
+            margin: 5px;
+        }
+
+
+    </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+
+    <header class="main-header">
+        <!-- Header Navbar: style can be found in header.less -->
+        [#include "/admin/common/nav.html"]
+    </header>
+
+    <!-- =============================================== -->
+
+    <!-- Left side column. contains the sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            <!-- Sidebar user panel -->
+            [@user_panel /]
+            <!-- search form -->
+            [@sidebar_form /]
+            <!-- /.search form -->
+            <!-- sidebar menu: : style can be found in sidebar.less -->
+            <ul class="sidebar-menu" data-widget="tree">
+                <li class="header">主面板</li>
+                [@menustag id=1]
+                [#list list as item]
+                [@menu item "1,79,81"]
+                [/@menu]
+                [/#list]
+                [/@menustag]
+            </ul>
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+
+    <!-- =============================================== -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                商品管理
+                <small>添加商品</small>
+            </h1>
+        </section>
+        <!-- Main content -->
+        <section class="content">
+
+            <!-- Default box -->
+            <div class="">
+                <!--商品信息-->
+                <div class="box box-info " style="margin-bottom: 0;">
+                    <div class="box-header with-border">
+                        <i class="pull-left fa fa-ellipsis-v"></i>
+                        <h3 class="box-title">商品信息</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form id="myForm" class="form-horizontal" action="${siteurl}admin/goods/model_save.htm" method="post">
+                        <input type="hidden" id="skuJson" name="skuJson"/>
+                        <input type="hidden" id="spuJson" name="spuJson"/>
+                        <div class="box-body ">
+                            <div class="form-group ">
+                                <label for="name" class="col-sm-2 control-label">商品名称</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="name" name="name" placeholder="商品名称" type="text">
+                                </div>
+                            </div>
+                            <div class="form-group ">
+                                <label for="catalog" class="col-sm-2 control-label">所属分类</label>
+                                <div class="col-sm-6">
+                                    <input type="text" id="catalog" name="catalog.id" class="form-control" value=""
+                                           placeholder="分类名称">
+                                    <div id="treeview"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-group ">
+                                <label for="name" class="col-sm-2 control-label">商品品牌</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="brand.id">
+                                        [@goodsBrand]
+                                        [#list list as item]
+                                        <option value="${item.id}">${item.name!""}</option>
+                                        [/#list]
+                                        [/@goodsBrand]
+                                    </select>
+
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="name" class="col-sm-2 control-label">计量单位</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" id="units" name="units" placeholder="计量单位" type="text">
+                                </div>
+                            </div>
+
+
+                            <div class="form-group ">
+                                <label for="name" class="col-sm-2 control-label">商品标签</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control " id="lable" name="lable" placeholder="商品标签" type="text">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="note" class="col-sm-2 control-label">描述信息</label>
+                                <div class="col-sm-6">
+
+                                    <textarea class="form-control" rows="3" id="note" name="note"
+                                              placeholder="描述信息"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </form>
+                </div>
+                <!--商品信息end-->
+
+                <!--商品规格-->
+                <div class="box box-info no-border" style="margin-bottom: 0;">
+                    <div class="box-header with-border">
+                        <i class="pull-left fa fa-ellipsis-v"></i>
+                        <h3 class="box-title">SKU信息</h3>
+                    </div>
+                    <!-- /.box-header -->
+                    <!-- form start -->
+                    <form class="form-horizontal">
+                        <!--规格项-->
+                        <div class="box-body " id="goodspus">
+
+                        </div>
+                        <!--规格项end-->
+                        <div class="box-body ">
+                            <button type="button" name="add" onclick="formSpuBtn()" class="btn btn-success">
+                                添加商品规格项
+                            </button>
+                        </div>
+                    </form>
+
+                <!--    <div class="box-footer  ">
+                        <button type="button" class="btn btn-default  center-block">取消</button>
+                        <button type="button" class="btn btn-info  center-block" onclick="okSubmit()">保存</button>
+                    </div>-->
+
+                </div>
+                <!--商品规格end-->
+
+                <!--商品SKU-->
+                    <div class="box box-info no-border">
+                        <div class="box-header with-border">
+                            <i class="pull-left fa fa-ellipsis-v"></i>
+                            <h3 class="box-title">规格信息</h3>
+                        </div>
+                        <!-- /.box-header -->
+                        <!-- form start -->
+                        <!-- /.box-header -->
+                        <div class="box-body">
+                            <table id="example2" class="table table-bordered table-hover">
+                                <thead >
+                                <tr>
+                                    <th id="spuNameList"></th>
+                                    <th>标题</th>
+                                    <th>销售原价</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="skuTrList">
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.box-body -->
+
+                        <div class="box-footer  ">
+                            <button type="button" class="btn btn-default  center-block">取消</button>
+                            <button type="button" class="btn btn-info  center-block" onclick="okSubmit()">保存</button>
+                        </div>
+                    </div>
+                <!--商品SKUend-->
+
+            </div>
+            <!-- /.box -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+
+    [#include "/admin/common/footer.html"]
+
+    <!-- Control Sidebar -->
+    [#include "/admin/common/aside.html"]
+
+    <!-- /.control-sidebar -->
+    <!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+<script type="text/tmplate" id="goodsSpuHtml">
+	<div class="form-group">
+		<label for="inputEmail3" class="col-sm-1 control-label">规格名称</label>
+
+		<div class="col-sm-3">
+            <select id="spuname" name="spuname"  class="form-control" onChange="move(this)" >
+                [@goodsSpuNameDirective]
+                [#list list as item]
+                <option value="${item.id}">${item.spuName!""}</option>
+                [/#list]
+                [/@goodsSpuNameDirective]
+            </select>
+		</div>
+
+        <div class="col-sm-3">
+            <select id="selspuvalues" name="selspuvalues" value="" onchange="selSpuValuesChange(this)" class="form-control">
+
+            </select>
+        </div>
+
+		<button type="button" id="btnId"  class="btn btn-success" onclick="formAddSpuValueBtn(this)">
+		    添加值
+		</button>
+
+		<div class="form-group col-xs-7"  style="margin-left: 132px;" name="share"  id="vid" >
+
+        </div>
+	</div>
+
+</script>
+
+<script type="text/tmplate" id="spuValueHtml">
+
+	<div class="box box-body  no-border"   style="margin-bottom: 0;">
+			<div class="col-xs-8">
+			  	<input type="text" class="form-control" id="spuVal" name="spuVal"  placeholder="规格值" >
+			</div>
+			<div class="col-xs-2"   style="padding-left: 0px;">
+				<button type="button" name="add" onclick="popoverAddSpuValueOKBtn(this)" class="btn btn-success">
+						添加
+				</button>
+			</div>
+			<div class="col-xs-2"  style="padding-left: 0px;">
+				<button type="button"  name="add" onclick="popoverAddSpuValueNoBtn(this)"  class="btn btn-success">
+						取消
+				</button>
+			</div>
+     </div>
+</script>
+
+
+
+
+<!-- 提交数据-->
+<script type="text/javascript">
+
+    function okSubmit(){
+        var spuArr = new Array();
+
+        var len = $("select[name='spuname']").size();//获取name标签的个数
+        var arr = [];
+        for(var index = 0; index < len; index++){//创建一个数字数组
+            arr[index] = index;
+        }
+
+        $.each(arr, function(i){//循环得到不同的id的值
+
+            var spuObj = new Object();
+            <!-- 获取所有选择的规格名称start -->
+            var spuName = $("select[name='spuname']").eq(i).val();
+            spuObj.spuName =  spuName;
+            <!-- 获取所有选择的规格名称end -->
+            <!-- 获取所有选择的规格值和自定义添加的规格值start -->
+            var idValue = $("div[name='share']").eq(i).attr("id");
+            if(idValue != ''){
+                var valarr = new Array();
+                $("#"+idValue).find("button").each(function(){
+                    var valObj = new Object();
+                    valObj.id = $(this).val();
+                    var text = $(this).html();
+                    var index = text.indexOf("<");
+                    valObj.text = text.substring(0,index).replace(/\s+/g,"");
+                    valarr.push(valObj);
+                })
+                spuObj.spuValue =valarr;
+            }
+            <!-- 获取所有选择的规格值和自定义添加的规格值end-->
+            spuArr.push(spuObj);
+        });
+        $("#spuJson").val(JSON.stringify(spuArr));
+        console.log(JSON.stringify(spuArr));
+        //表单提交
+        var tempform = $('#myForm');
+        tempform.submit();
+    }
+
+</script>
+<!--商品SPU 操作事件-->
+<script type="text/javascript">
+
+    var defaultData = [@goodsCatalogTreeDirective /];
+    <!--商品分类下拉框点击事件-->
+    $("#catalog").click(function () {
+        $("#treeview").show();
+        var options = {
+            bootstrap2: false,
+            showTags: false,
+            levels: 5,
+            showCheckbox: false,
+            checkedIcon: "glyphicon glyphicon-check",
+            data: defaultData,
+            onNodeSelected: function (event, data) {
+                $("#catalog").val(data.id);
+                $("#treeview").hide();
+            }
+        };
+        $("#treeview").treeview(options);
+    });
+
+    //添加项次数
+    var i = 0;
+    //点击添加值
+    var onclick_i;
+
+    <!--商品添加规格按钮事件-->
+    function formSpuBtn() {
+        var template = $("#goodsSpuHtml").html();
+        $("#goodspus").append(template);
+        i += 1;
+        $("#spuname").attr("id", "spuname_" + i);
+        $("#selspuvalues").attr("id", "selspuvalues_" + i);
+        $("#btnId").attr("id", "btnId_" + i);
+        $("#vid").attr("id", "vid_" + i);
+    }
+
+
+    function move(obj){
+        var id = $(obj).attr("id");
+        var selSpuNameVal = $("#"+id).val();
+        var selSpuValueIndex = id.substring(id.lastIndexOf("_") + 1, id.length);
+        $("#selspuvalues_"+selSpuValueIndex).empty();
+        $.post("${siteurl}admin/spuname/model_find.htm",{id:selSpuNameVal},function(result){
+            $.each(result,function(index,value){
+                var option = document.createElement("option");
+                option.value = value.id;
+                option.innerHTML = value.spuValue;
+                $(option).appendTo($("#selspuvalues_"+selSpuValueIndex));
+            });
+
+        });
+
+
+
+    }
+
+    <!--监听下拉框事件-->
+    function selSpuValuesChange(obj){
+        var id = $(obj).attr("id");
+        var index = id.substring(id.lastIndexOf("_") + 1, id.length);
+        var html = '<button type="button" onclick="removeVid(this)" class="btn btn-default btn-xs "  value="'+ $(obj).val() +'" > ' +$("#"+id+" option:selected").text() + ' <i class="fa fa-close"></i></button>';
+        $("#vid_" + index).append(html);
+       //********************修改sku******************
+        skuUpdate();
+    }
+
+    <!--删除添加的值-->
+    function removeVid(obj){
+        $(obj).remove();
+    }
+
+    <!--商品添加popover 规格值按钮事件-->
+    function formAddSpuValueBtn(obj) {
+        var id = $(obj).attr("id");
+        onclick_i = id.substring(id.lastIndexOf("_") + 1, id.length);
+        var template = $("#spuValueHtml").html();
+        $("#" + id).popover({html: true, placement: 'bottom', content: template}).popover('show');
+
+    }
+
+    <!--popover 确定事件-->
+    function popoverAddSpuValueOKBtn(obj) {
+        $("#btnId_" + onclick_i).popover('hide');
+        var spuval = $(obj).parent().parent().find('input').val();
+        var html = '<button type="button" onclick="removeVid(this)" class="btn btn-default btn-xs "  value="-1"> ' + spuval + ' <i class="fa fa-close"></i></button>';
+        $("#vid_" + onclick_i).append(html);
+    }
+
+    <!--popover 取消事件-->
+    function popoverAddSpuValueNoBtn(obj) {
+         $("#btnId_" + onclick_i).popover('hide');
+    }
+
+
+
+    $(document).ready(function () {
+
+    });
+</script>
+
+<!--商品SKU 显示更新操作事件-->
+<script type="text/javascript">
+    function skuUpdate(){
+       var skuList = [];
+
+       var size = 0;
+       $("#goodspus >div.form-group").each(function(){
+          //获取spu值和name标题
+          var spuName = $(this).find("select[name='spuname']  option:selected ").text();
+          var spuNameId = $(this).find("select[name='spuname']  option:selected ").val();
+          //获取spu选中后的有多少个button share
+          var shareSize =  $(this).find("div[name='share']").find("button").size();
+
+          if(shareSize>size){
+            size = shareSize;
+          }
+
+          var skuObj = new Object();
+          skuObj.spuShareSize = shareSize;
+          skuObj.spuName = spuName;
+          skuObj.spuNameId = spuNameId;
+
+          //获取每个button的值和标题
+          var spuShareList = [];
+          $(this).find("div[name='share']").find("button").each(function(){
+             var share = new Object();
+             share.text = $(this).html().replace('<i class="fa fa-close"></i>',"");
+             share.value = $(this).val();
+             spuShareList.push(share);
+          });
+
+          skuObj.spuShareList = spuShareList;
+          skuList.push(skuObj);
+
+        });
+
+        $("#spuNameList").html("");
+        $("#skuTrList").html("");
+
+
+       //显示sku列表
+        var cakcArray = [];
+        $.each(skuList,function(index,value){
+            cakcArray.push(value.spuShareList);
+            $("#spuNameList").append(value.spuName+"/");
+        });
+
+
+        //sku属性组合
+        var skuTrList =  calcDescartes(cakcArray);
+        $("#skuJson").val(JSON.stringify(skuTrList));
+        $.each(skuTrList,function(index,skuTr){
+            var text="";
+            //判断只有一个选项还是多个人选项
+            if(skuTr  instanceof Array){
+                $.each(skuTr,function(index,value){
+                  text += value.text +"/";
+                });
+            }else{
+                text = skuTr.text;
+            }
+            var html = "<tr><td>"+text+"</td><td></td><td></td><td>删除</td></tr>";
+            $("#skuTrList").append(html);
+        });
+
+    }
+
+    <!--感谢笛卡尔老爷子，没有你的数学算法哪里来的淘宝计算机，都是狗屁！-->
+    function calcDescartes (array) {
+        if (array.length < 2) return array[0] || [];
+        return [].reduce.call(array, function (col, set) {
+            var res = [];
+            col.forEach(function (c) {
+                set.forEach(function (s) {
+                    var t = [].concat(Array.isArray(c) ? c : [c]);
+                    t.push(s);
+                    res.push(t);
+                })
+            });
+            return res;
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>

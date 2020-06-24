@@ -1,0 +1,5 @@
+SELECT SUM(bs_tenant_venue_order.money) AS money, DATE_FORMAT(bs_tenant_venue_order.addDate,'%Y-%m-%d') AS day
+FROM bs_tenant_venue_order
+GROUP BY day
+ORDER BY day DESC
+LIMIT 30

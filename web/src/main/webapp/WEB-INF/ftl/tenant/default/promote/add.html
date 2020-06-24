@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>促销</title>
+	[#include "/admin/common/commons.html"]
+	[#include "/tenant/common/site.html"]
+	[@baseHead /]
+	<style>
+		.el-upload input {
+			display: none;
+		}
+
+		.avatar-uploader .el-upload {
+			border: 1px dashed #d9d9d9;
+			border-radius: 6px;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+			float: left;
+		}
+
+		.avatar-uploader .el-upload:hover {
+			border-color: #409EFF;
+		}
+
+		.avatar-uploader-icon {
+			font-size: 28px;
+			color: #8c939d;
+			width: 90px;
+			height: 90px;
+			line-height: 90px;
+			text-align: center;
+		}
+
+		.avatar {
+			width: 90px;
+			height: 90px;
+			display: block;
+		}
+	</style>
+</head>
+
+<body class="hold-transition skin-blue sidebar-mini">
+	<!-- Site wrapper -->
+	<div class="wrapper">
+
+		<header class="main-header">
+			<!-- Header Navbar: style can be found in header.less -->
+			[#include "/admin/common/nav.html"]
+		</header>
+
+		<!-- =============================================== -->
+
+		<!-- Left side column. contains the sidebar -->
+		<aside class="main-sidebar">
+			<!-- sidebar: style can be found in sidebar.less -->
+			<section class="sidebar">
+				[@user_panel /]
+				<!-- search form -->
+				[@sidebar_form /]
+				<!-- /.search form -->
+				<!-- sidebar menu: : style can be found in sidebar.less -->
+				<ul class="sidebar-menu" data-widget="tree">
+					<li class="header">主面板</li>
+					[@menustag id=1]
+					[#list list as item]
+					[@menu item "1,92,94"]
+					[/@menu]
+					[/#list]
+					[/@menustag]
+				</ul>
+			</section>
+			<!-- /.sidebar -->
+		</aside>
+
+		<!-- =============================================== -->
+
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper" id="app">
+			<!-- Content Header (Page header) -->
+			<section class="content-header">
+				<!-- 导航 -->
+				<div class="navigation">
+					<i>首页</i> <span>促销</span>
+				</div>
+			</section>
+			<!-- Main content -->
+			<section class="content">
+				<!-- Default box -->
+
+				<el-form ref="form" :model="form" label-width="160px" ref="ruleForm"
+					action="${siteurl}tenant/promote/model_save.htm" method="post">
+					<input type="hidden" name="logo" id="logo" >
+
+					<el-row :gutter="10">
+						<el-col :span="24">
+							<el-form-item label="活动封面" size="mini">
+								<el-upload class="avatar-uploader" action="https://saas.metamall.cn/storage/upload.htm"
+									:show-file-list="false" :on-success="handleAvatarSuccess">
+									<img v-if="imageUrl" :src="imageUrl" class="avatar">
+									<i v-else class="el-icon-plus avatar-uploader-icon"></i>
+								</el-upload>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="开始时间" size="mini">
+								<el-date-picker v-model="form.beginDate" type="date" placeholder="选择日期">
+								</el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="结束时间" size="mini">
+								<el-date-picker v-model="form.endDate" type="date" placeholder="选择日期">
+								</el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="名称" size="mini">
+								<el-input v-model="form.name" name="name"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="付款比例" size="mini">
+								<el-input v-model="form.scale" name="scale">
+									<template slot="append">%</template>
+								</el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="起订量" size="mini">
+								<el-input v-model="form.mini" name="mini"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="步长" size="mini">
+								<el-input v-model="form.step" name="step"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="12">
+							<el-form-item label="活动说明" size="mini">
+								<el-input v-model="form.note" name="note"></el-input>
+							</el-form-item>
+						</el-col>
+					</el-row>
+					<el-row style="text-align: right;">
+						<el-button @click="resetForm('ruleForm')">重置</el-button>
+						<el-button type="primary" native-type="submit">确定</el-button>
+					</el-row>
+				</el-form>
+
+				<!-- /.box -->
+			</section>
+
+			<!-- /.content -->
+		</div>
+		<!-- /.content-wrapper -->
+
+		[#include "/admin/common/footer.html"]
+
+		<!-- Control Sidebar -->
+		[#include "/admin/common/aside.html"]
+
+		<!-- /.control-sidebar -->
+		<!-- Add the sidebar's background. This div must be placed
+     immediately after the control sidebar -->
+		<div class="control-sidebar-bg"></div>
+	</div>
+	<!-- ./wrapper -->
+	[@baseScript /]
+	<script>
+		var vm = new Vue({
+			el: '#app',
+			data: function () {
+				return {
+					form: {
+						beginDate: '',
+						endDate: '',
+						name: '',
+						mini: '',
+						step: '',
+						note: '',
+						scale:''
+					},
+					imageUrl:""
+				}
+			},
+			mounted: function () {
+			},
+			methods: {
+				handleAvatarSuccess(res, file) {
+					this.imageUrl = res.url;
+					this.form.logo = res.url;
+					$("#logo").val(res.url);
+				},
+			}
+		})
+	</script>
+
+</body>
+
+</html>
